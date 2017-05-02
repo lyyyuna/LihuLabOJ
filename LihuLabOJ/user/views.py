@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.contrib import auth
 
 from rest_framework.views import APIView
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 from .serializers import UserLoginSerializer
 from common import shortcuts
@@ -26,3 +28,15 @@ class UserLoginAPIView(APIView):
                 return shortcuts.error_response('Login failed.')
         else:
             return shortcuts.error_response('The input cannot be accepted.')
+
+
+class UserLogoutAPIView(APIView):
+    authentication_classes = (SessionAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        '''
+        For user logout
+        '''
+        auth.logout(request)
+        return shortcuts.success_response('Logout success.')
