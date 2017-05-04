@@ -3,8 +3,9 @@ from django.contrib import auth
 from django.contrib.auth.models import User
 
 from rest_framework.views import APIView
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
 
 from .serializers import UserLoginSerializer, UserProfileSerializer
 from common import shortcuts
@@ -52,3 +53,22 @@ class UserProfileAPIView(APIView):
         if user is not None:
             profile = UserProfileSerializer(user)
             return shortcuts.success_response(profile.data)
+
+
+class EditUserProfileAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        '''
+        Update a user's profile
+        '''
+        user = request.user
+        if user is not None:
+            profile = UserProfileSerializer(user, data=request.data, partial=True)
+            if profile.is_valid():
+                profile.save()
+            else:
+                return shortcuts.error_response('The input is invalid.')
+            return shortcuts.success_response('Update user profile success.')
+        else:
+            return shortcuts.error_response('The user doesnt exist.')

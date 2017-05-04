@@ -33,3 +33,17 @@ class AccountsTestCase(TestCase):
         js_dic = json.loads(res.content.decode('utf-8'))
         self.assertEqual(js_dic['code'], 0)
         self.assertEqual(js_dic['data'], 'Logout success.')
+
+    def test_update_user_profile(self):
+        self.client.login(username='yigo', password='yigo')
+        res = self.client.post(reverse('edit_user_profile_api'), {'signature': 'sdsd', 'description': 'sdssdfsdfsdfsdfdsfdfsd搞一个大新闻dsd'})
+        self.assertEqual(res.status_code, 200)
+        js_dic = json.loads(res.content.decode('utf-8'))
+        self.assertEqual(js_dic['data'], 'Update user profile success.')
+        
+        res = self.client.get(reverse('user_profile_api', args=['1']))
+        self.assertEqual(res.status_code, 200)
+        js_dic = json.loads(res.content.decode('utf-8'))
+        self.assertEqual(js_dic['data']['username'], 'yigo')
+        self.assertEqual(js_dic['data']['signature'], 'sdsd')
+        self.assertEqual(js_dic['data']['description'], 'sdssdfsdfsdfsdfdsfdfsd搞一个大新闻dsd')
