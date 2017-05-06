@@ -31,3 +31,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         profile, created = UserProfile.objects.get_or_create(user=user, defaults=profile_data)
         if not created and profile_data is not None:
             super(UserProfileSerializer, self).update(profile, profile_data)
+
+
+class PasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(min_length=8, max_length=20)

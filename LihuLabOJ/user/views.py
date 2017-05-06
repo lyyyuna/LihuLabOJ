@@ -1,13 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib import auth
 from django.contrib.auth.models import User
 
 from rest_framework.views import APIView
+from rest_framework import viewsets
+from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.decorators import api_view, permission_classes, detail_route
 
-from .serializers import UserLoginSerializer, UserProfileSerializer
+from .serializers import UserLoginSerializer, UserProfileSerializer, PasswordSerializer
 from common import shortcuts
 
 
@@ -44,31 +46,46 @@ class UserLogoutAPIView(APIView):
         return shortcuts.success_response('Logout success.')
 
 
-class UserProfileAPIView(APIView):
-    def get(self, request, id):
-        '''
-        View a user's profile
-        '''
-        user = User.objects.get(pk=id)
-        if user is not None:
-            profile = UserProfileSerializer(user)
-            return shortcuts.success_response(profile.data)
+class UserProfileViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
 
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            self.permission_classes = [IsAuthenticated,]            
+        return super(UserProfileViewSet, self).get_permissions()
 
-class EditUserProfileAPIView(APIView):
-    permission_classes = (IsAuthenticated,)
+    def list(self, request):
+        queryset = User.objects.all()
+        profile = UserProfileSerializer(queryset, many=True)
+        return shortcuts.success_response(profile.data)
 
-    def post(self, request):
-        '''
-        Update a user's profile
-        '''
+    def retrieve(self, request, pk):
+        queryset = User.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        profile = UserProfileSerializer(user)
+        return shortcuts.success_response(profile.data)
+
+    def update(self, request):
         user = request.user
-        if user is not None:
-            profile = UserProfileSerializer(user, data=request.data, partial=True)
-            if profile.is_valid():
-                profile.save()
-            else:
-                return shortcuts.error_response('The input is invalid.')
+        serializer = UserProfileSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
             return shortcuts.success_response('Update user profile success.')
         else:
-            return shortcuts.error_response('The user doesnt exist.')
+            return shortcuts.error_response(serializer.errors)
+
+    def set_password(self, request):
+        user = request.user
+        serializer = PasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            user.set_password(serializer.data['password'])
+            user.save()
+            return shortcuts.success_response('Set password success.')
+        else:
+            return shortcuts.error_response(serializer.errors)
+        
+
+        
+    
+
+
