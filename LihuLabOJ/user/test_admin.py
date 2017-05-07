@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from rest_framework.test import APIClient
 import json
 
-class AccountsTestCase(TestCase):
+class AdminTestCase(TestCase):
     def setUp(self):
         admin = User.objects.create_user(username='admin', password='yigo')
         admin.is_staff = True
