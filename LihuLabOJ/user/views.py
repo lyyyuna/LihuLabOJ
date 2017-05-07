@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib import auth
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AnonymousUser
 
 from rest_framework.views import APIView
 from rest_framework import viewsets
@@ -9,7 +9,7 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import api_view, permission_classes, detail_route
 
-from .serializers import UserLoginSerializer, UserProfileSerializer, PasswordSerializer
+from .serializers import UserLoginSerializer, UserProfileSerializer, PasswordSerializer, AdminUserProfileSerializer
 from common import shortcuts
 
 
@@ -83,9 +83,39 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             return shortcuts.success_response('Set password success.')
         else:
             return shortcuts.error_response(serializer.errors)
-        
 
+    def get_myprofile(self, request):
+        user = request.user
+        serializer = UserProfileSerializer(user)
+        return shortcuts.success_response(serializer.data)
         
-    
+        
+class AdminUserProfileViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
 
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            self.permission_classes = [IsAdminUser,]            
+        return super(AdminUserProfileViewSet, self).get_permissions()
+
+    def update(self, request, pk):
+        queryset = User.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = AdminUserProfileSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return shortcuts.success_response('Admin: Update user profile success.')
+        else:
+            return shortcuts.error_response(serializer.errors)
+
+    def set_password(self, request, pk):
+        queryset = User.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = PasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            user.set_password(serializer.data['password'])
+            user.save()
+            return shortcuts.success_response('Admin: Set password success.')
+        else:
+            return shortcuts.error_response(serializer.errors)
 

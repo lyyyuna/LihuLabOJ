@@ -53,3 +53,14 @@ class AccountsTestCase(TestCase):
         self.assertEqual(res.status_code, 403)
         js_dic = json.loads(res.content.decode('utf-8'))
         self.assertEqual(js_dic['detail'], 'Authentication credentials were not provided.')
+
+    def test_get_my_profile(self):
+        self.client.login(username='yigo', password='yigo')
+        res = self.client.post(reverse('user_get_self_profile_api'))
+        self.assertEqual(res.status_code, 200)
+        js_dic = json.loads(res.content.decode('utf-8'))
+        self.assertEqual(js_dic['data']['username'], 'yigo')
+
+    def test_FET_get_my_profile_without_auth(self):
+        res = self.client.post(reverse('user_get_self_profile_api'))
+        self.assertEqual(res.status_code, 403)
