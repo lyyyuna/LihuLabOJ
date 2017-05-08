@@ -135,6 +135,26 @@ class AdminUserProfileViewSet(viewsets.ModelViewSet):
         else:
             return shortcuts.error_response(serializer.errors)
 
+    def set_user_status(self, request, pk, status):
+        queryset = User.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        if user.is_staff == True:
+            return shortcuts.error_response('This user is admin. Cannot set status.')
+        else:
+            if status == 1:
+                if user.is_active == True:
+                    return shortcuts.success_response('User already enabled.')
+                else:
+                    user.is_active = True
+                    user.save()
+                    return shortcuts.success_response('Enable user success.')
+            if status == 0:
+                if user.is_active == True:
+                    user.is_active = False
+                    user.save()
+                    return shortcuts.success_response('Disable user success.')
+            else:
+                return shortcuts.error_response('Unkown status.')
 
 class RankListViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all().order_by('-passproblem', 'failedproblem', 'id')
