@@ -49,10 +49,13 @@ class UserProfileAPIView(APIView):
         '''
         View a user's profile
         '''
-        user = User.objects.get(pk=id)
-        if user is not None:
-            profile = UserProfileSerializer(user)
-            return shortcuts.success_response(profile.data)
+        try:
+            user = User.objects.get(pk=id)
+        except User.DoesNotExist:
+            return shortcuts.error_response('The user doesnt exist.')
+
+        profile = UserProfileSerializer(user)
+        return shortcuts.success_response(profile.data)
 
 
 class EditUserProfileAPIView(APIView):

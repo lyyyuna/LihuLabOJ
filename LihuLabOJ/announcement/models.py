@@ -13,4 +13,3 @@ class Announcement(models.Model):
     class Meta:
         #To order by updated descending,
         ordering = ('-updated',)
-    

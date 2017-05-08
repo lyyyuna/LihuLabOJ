@@ -15,19 +15,9 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from announcement import views
-from announcement.views import AnnouncementViewSet, api_root
-from rest_framework.routers import DefaultRouter
-
-
-# API endpoints
-# Create a router and register our viewsets with it.
-router = DefaultRouter()
-router.register(r'announcement', views.AnnouncementViewSet)
-
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^user/', include('user.urls')),
-    url(r'^', include(router.urls)),
+    url(r'^announcement/', include('announcement.urls')),
     ]
