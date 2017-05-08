@@ -10,7 +10,9 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import api_view, permission_classes, detail_route
 
-from .serializers import UserLoginSerializer, UserProfileSerializer, PasswordSerializer, AdminUserProfileSerializer
+from .serializers import UserLoginSerializer, UserProfileSerializer, PasswordSerializer, \
+                    AdminUserProfileSerializer, RankListSerializer
+from .models import UserProfile
 from common import shortcuts
 
 
@@ -51,7 +53,6 @@ class UserLogoutAPIView(APIView):
 class StandardResultsSetPagination(PageNumberPagination):
     page_size = 20
     page_size_query_param = 'page_size'
-    max_page_size = 1000
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
@@ -134,3 +135,14 @@ class AdminUserProfileViewSet(viewsets.ModelViewSet):
         else:
             return shortcuts.error_response(serializer.errors)
 
+
+class RankListViewSet(viewsets.ModelViewSet):
+    queryset = UserProfile.objects.all().order_by('-passproblem', 'failedproblem', 'id')
+    pagination_class = StandardResultsSetPagination
+    serializer_class = RankListSerializer
+
+
+    # def list(self, request):
+    #     queryset = UserProfile.objects.all().order_by('-passproblem')
+    #     serializers = RankListSerializer(queryset, many=True)
+    #     return Response(serializers.data)

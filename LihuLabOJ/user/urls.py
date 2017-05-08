@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from .views import UserLoginAPIView, UserLogoutAPIView
-from .views import UserProfileViewSet, AdminUserProfileViewSet
+from .views import UserProfileViewSet, AdminUserProfileViewSet, RankListViewSet
 from rest_framework import routers
 
 
@@ -25,6 +25,9 @@ admin_edit_user_detail = AdminUserProfileViewSet.as_view({
 admin_set_user_password = AdminUserProfileViewSet.as_view({
     'post' : 'set_password'
 })
+get_ranklist = RankListViewSet.as_view({
+    'get' : 'list',
+})
 
 
 urlpatterns = [
@@ -37,4 +40,5 @@ urlpatterns = [
     url(r'^myprofile', get_myprofile, name='user_get_self_profile_api'),
     url(r'^admin/profile/(?P<pk>[0-9]+)', admin_edit_user_detail, name = 'admin_edit_user_profile_api'),
     url(r'^admin/changepw/(?P<pk>[0-9]+)', admin_set_user_password, name = 'admin_set_user_password_api'),
+    url(r'^rank', get_ranklist, name='get_ranklist_api')
 ]

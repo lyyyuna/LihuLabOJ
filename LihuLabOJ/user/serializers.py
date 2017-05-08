@@ -60,3 +60,12 @@ class AdminUserProfileSerializer(serializers.ModelSerializer):
         profile, created = UserProfile.objects.get_or_create(user=user, defaults=profile_data)
         if not created and profile_data is not None:
             super(AdminUserProfileSerializer, self).update(profile, profile_data)
+
+
+class RankListSerializer(serializers.ModelSerializer):
+    userid = serializers.IntegerField(source='user.id')
+    username = serializers.CharField(source='user.username')
+
+    class Meta:
+        model = UserProfile
+        fields = ('userid', 'username', 'passproblem', 'failedproblem', 'signature')
