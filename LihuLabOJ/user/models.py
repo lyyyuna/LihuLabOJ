@@ -5,5 +5,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     signature = models.CharField(max_length=20, default='', blank=True)
     description = models.CharField(max_length=100, default='', blank=True)
+    passproblem = models.IntegerField(default=0, db_index=True)
+    failedproblem = models.IntegerField(default=0, db_index=True)
 
     
