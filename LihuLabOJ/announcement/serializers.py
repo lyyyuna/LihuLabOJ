@@ -1,7 +1,8 @@
 from rest_framework import serializers
+
 from announcement.models import Announcement
 
-#from django.contrib.auth.models import User
+
 class AnnouncementSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
     class Meta:

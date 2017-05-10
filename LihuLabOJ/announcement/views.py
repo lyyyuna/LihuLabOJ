@@ -1,18 +1,20 @@
-from announcement.models import Announcement
-from announcement.serializers import AnnouncementSerializer,AnnouncementTitleSerializer
+from collections import OrderedDict
+
 from rest_framework import permissions,pagination
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import generics
+
+from .models import Announcement
+from .serializers import AnnouncementSerializer,AnnouncementTitleSerializer
+from .permissions import IsOwnerOrReadOnly,IsAdminUserOrReadOnly
 from common import shortcuts
-from collections import OrderedDict
-from announcement.permissions import IsOwnerOrReadOnly
+
 
 class StandardResultsSetPagination(pagination.PageNumberPagination):
-    page_size = 4
+    page_size = 10
     page_size_query_param = 'page_size'
-    #max_page_size = 1000
 
 class AnnouncementList(generics.GenericAPIView):
     """
@@ -21,14 +23,13 @@ class AnnouncementList(generics.GenericAPIView):
     queryset = Announcement.objects.all()
     serializer_class = AnnouncementSerializer
     pagination_class = StandardResultsSetPagination
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
+    permission_classes = (IsAdminUserOrReadOnly,)
+    
     def get(self, request,*args, **kwargs):
         page = self.paginate_queryset(self.get_queryset())
         if page is not None:
             serializer =  AnnouncementTitleSerializer(page, many=True,context={'request': request})
             return self.get_paginated_response(serializer.data)
-            #return shortcuts.success_response(serializer.data)
         else:
             serializer = AnnouncementTitleSerializer(page, many=True,context={'request': request})
             return shortcuts.success_response(serializer.data)
@@ -48,16 +49,15 @@ class AnnouncementDetail(generics.GenericAPIView):
     """
     queryset = Announcement.objects.all()
     serializer_class = AnnouncementSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly,)
+    permission_classes = (IsAdminUserOrReadOnly,)
 
     def get_object(self, pk):
         try:
-            return Announcement.objects.get(pk=pk)
+            obj = Announcement.objects.get(pk=pk)
+            self.check_object_permissions(self.request, obj)
+            return obj
         except Announcement.DoesNotExist:
             return None
-
-
 
     def get(self, request, pk, format=None):
         Announcement = self.get_object(pk)
