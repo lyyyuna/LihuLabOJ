@@ -18,3 +18,17 @@ class AccountsTestCase(TestCase):
         js_dic = json.loads(res.content.decode('utf-8'))
         self.assertEqual(js_dic['code'], 0)
         self.assertEqual(js_dic['data'], status.LOGIN_SUCCESS)
+
+    def test_FET_user_login_wrong_password(self):
+        res = self.client.post(reverse('user_login_api'), {'username': 'yigo', 'password': 'yigo111'}, format='json')
+        self.assertEqual(res.status_code, 200)
+        js_dic = json.loads(res.content.decode('utf-8'))
+        self.assertEqual(js_dic['code'], 1)
+        self.assertEqual(js_dic['data'], status.LOGIN_FAILED)
+
+    def test_FET_user_login_too_long_input(self):
+        res = self.client.post(reverse('user_login_api'), {'username': 'yigo1111111111111111111111111111111111111111111111111111111112222222222222222222222222222222222222222222222223333333333333333333333333333333333333333333333333', 'password': 'yigo111'}, format='json')
+        self.assertEqual(res.status_code, 200)
+        js_dic = json.loads(res.content.decode('utf-8'))
+        self.assertEqual(js_dic['code'], 1)
+        self.assertEqual(js_dic['data'], status.INPUT_INVALID)
