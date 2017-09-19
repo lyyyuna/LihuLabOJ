@@ -3,6 +3,8 @@ from django.contrib import auth
 from django.contrib.auth.models import User, AnonymousUser
 
 from rest_framework.views import APIView
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 from .serializers import UserLoginSerializer
 
@@ -26,3 +28,12 @@ class UserLoginAPIView(APIView):
                 return shortcuts.error_response(status.LOGIN_FAILED)
         else:
             return shortcuts.error_response(status.INPUT_INVALID)
+
+
+class UserLogoutAPIView(APIView):
+    authentication_classes = (SessionAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        auth.logout(request)
+        return shortcuts.success_response(status.LOGOUT_SUCCESS)
