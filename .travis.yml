@@ -12,6 +12,7 @@ python:
   - "3.5"
 
 before_install:
+  - cd lihulaboj
   - export DJANGO_SETTINGS_MODULE=lihulaboj.settings
 
 install:
@@ -19,6 +20,6 @@ install:
   - pip install djangorestframework --quiet
 
 script: 
-  - python lihulaboj/manage.py makemigrations
-  - python lihulaboj/manage.py migrate
-  - python lihulaboj/manage.py test --pattern="test_*.py"
+  - python manage.py makemigrations
+  - python manage.py migrate
+  - python manage.py test --pattern="test_*.py"
