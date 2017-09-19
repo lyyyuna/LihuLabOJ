@@ -1,0 +1,24 @@
+language: python
+
+notifications:
+  email:
+    recipients:
+      - lyyyuna@outlook.com
+      - 1546331221@qq.com
+    on_success: always
+    on_failure: always
+
+python:
+  - "3.5"
+
+before_install:
+  - export DJANGO_SETTINGS_MODULE=lihulaboj.settings
+
+install:
+  - pip install django --quiet
+  - pip install djangorestframework --quiet
+
+script: 
+  - python lihulaboj/manage.py makemigrations
+  - python lihulaboj/manage.py migrate
+  - python lihulaboj/manage.py test
