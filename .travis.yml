@@ -21,4 +21,4 @@ install:
 script: 
   - python lihulaboj/manage.py makemigrations
   - python lihulaboj/manage.py migrate
-  - python lihulaboj/manage.py test
+  - python lihulaboj/manage.py test --pattern="test_*.py"
