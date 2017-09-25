@@ -10,6 +10,7 @@ from common import status
 class AccountsTestCase(TestCase):
     def setUp(self):
         User.objects.create_user(username='yigo', password='yigo')
+        User.objects.create_user(username='yigo2', password='yigo')
         self.client = APIClient()
 
     def test_user_login(self):
@@ -50,3 +51,14 @@ class AccountsTestCase(TestCase):
         self.assertEqual(res.status_code, 403)
         js_dic = json.loads(res.content.decode('utf-8'))
         self.assertEqual(js_dic['detail'], 'Authentication credentials were not provided.')
+
+    def test_get_self_profile(self):
+        self.client.login(username='yigo2', password='yigo')
+        res = self.client.get(reverse('user_myprofile_api'))
+        self.assertEqual(res.status_code, 200)
+        js_dic = json.loads(res.content.decode('utf-8'))
+        self.assertEqual(js_dic['data']['username'], 'yigo2')
+
+    def test_FET_get_self_profile_without_login(self):
+        res = self.client.get(reverse('user_myprofile_api'))
+        self.assertEqual(res.status_code, 403)

@@ -1,12 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib import auth
 from django.contrib.auth.models import User, AnonymousUser
 
 from rest_framework.views import APIView
+from rest_framework import viewsets
 from rest_framework.authentication import SessionAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.pagination import PageNumberPagination
 
-from .serializers import UserLoginSerializer
+from .serializers import UserLoginSerializer, UserProfileSerializer
 
 from common import shortcuts, status
 
@@ -37,3 +39,24 @@ class UserLogoutAPIView(APIView):
     def get(self, request):
         auth.logout(request)
         return shortcuts.success_response(status.LOGOUT_SUCCESS)
+
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 20
+    page_size_query_param = 'page_size'
+
+
+class UserProfileViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all().order_by('id')
+    pagination_class = StandardResultsSetPagination
+    serializer_class = UserProfileSerializer
+
+    def get_permissions(self):
+        if self.action == 'retrieve':
+            self.permission_classes = [IsAuthenticated,]
+        return super(self.__class__, self).get_permissions()
+
+    def retrieve(self, request):
+        user = request.user
+        serializer = UserProfileSerializer(user)
+        return shortcuts.success_response(serializer.data)
