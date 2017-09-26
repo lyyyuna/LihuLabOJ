@@ -54,9 +54,21 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action == 'retrieve':
             self.permission_classes = [IsAuthenticated,]
+        elif self.action == 'update':
+            self.permission_classes = [IsAuthenticated,]
         return super(self.__class__, self).get_permissions()
 
     def retrieve(self, request):
         user = request.user
         serializer = UserProfileSerializer(user)
         return shortcuts.success_response(serializer.data)
+
+    def update(self, request):
+        user = request.user
+        serializer = UserProfileSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return shortcuts.success_response(status.UPDATE_PROFILE_SUCCESS)
+        else:
+            return shortcuts.error_response(status.UPDATE_PROFILE_FAILED)
+

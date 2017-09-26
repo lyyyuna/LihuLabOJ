@@ -62,3 +62,22 @@ class AccountsTestCase(TestCase):
     def test_FET_get_self_profile_without_login(self):
         res = self.client.get(reverse('user_myprofile_api'))
         self.assertEqual(res.status_code, 403)
+
+    def test_update_user_profile(self):
+        self.client.login(username='yigo', password='yigo')
+        res = self.client.post(reverse('edit_user_profile_api'), {'signature': 'sdssdfsdfsdfsdfdsfdfsd搞一个大新闻dsd'})
+        self.assertEqual(res.status_code, 200)
+        js_dic = json.loads(res.content.decode('utf-8'))
+        self.assertEqual(js_dic['data'], status.UPDATE_PROFILE_SUCCESS)
+        
+        res = self.client.get(reverse('user_myprofile_api'))
+        self.assertEqual(res.status_code, 200)
+        js_dic = json.loads(res.content.decode('utf-8'))
+        self.assertEqual(js_dic['data']['username'], 'yigo')
+        self.assertEqual(js_dic['data']['signature'], 'sdssdfsdfsdfsdfdsfdfsd搞一个大新闻dsd')
+
+    def test_FET_update_user_profile_without_auth(self):
+        res = self.client.post(reverse('edit_user_profile_api'), {'signature': 'sdsd'})
+        self.assertEqual(res.status_code, 403)
+        js_dic = json.loads(res.content.decode('utf-8'))
+        self.assertEqual(js_dic['detail'], 'Authentication credentials were not provided.')
