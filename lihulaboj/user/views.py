@@ -5,10 +5,10 @@ from django.contrib.auth.models import User, AnonymousUser
 from rest_framework.views import APIView
 from rest_framework import viewsets
 from rest_framework.authentication import SessionAuthentication
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.pagination import PageNumberPagination
 
-from .serializers import UserLoginSerializer, UserProfileSerializer, PasswordSerializer
+from .serializers import UserLoginSerializer, UserProfileSerializer, PasswordSerializer, UserProfileAdminSerializer
 
 from common import shortcuts, status
 
@@ -58,6 +58,8 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             self.permission_classes = [IsAuthenticated,]
         elif self.action == 'change_password':
             self.permission_classes = [IsAuthenticated,]
+        elif self.action == 'retrieve_byid':
+            self.permission_classes = [IsAdminUser,]
         return super(self.__class__, self).get_permissions()
 
     def retrieve(self, request):
@@ -84,3 +86,8 @@ class UserProfileViewSet(viewsets.ModelViewSet):
         else:
             return shortcuts.error_response(serializer.errors)
 
+    def retrieve_byid(self, request, pk):
+        queryset = User.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        profile = UserProfileAdminSerializer(user)
+        return shortcuts.success_response(profile.data)    
