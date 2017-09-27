@@ -8,7 +8,7 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.pagination import PageNumberPagination
 
-from .serializers import UserLoginSerializer, UserProfileSerializer
+from .serializers import UserLoginSerializer, UserProfileSerializer, PasswordSerializer
 
 from common import shortcuts, status
 
@@ -56,6 +56,8 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             self.permission_classes = [IsAuthenticated,]
         elif self.action == 'update':
             self.permission_classes = [IsAuthenticated,]
+        elif self.action == 'change_password':
+            self.permission_classes = [IsAuthenticated,]
         return super(self.__class__, self).get_permissions()
 
     def retrieve(self, request):
@@ -71,4 +73,14 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             return shortcuts.success_response(status.UPDATE_PROFILE_SUCCESS)
         else:
             return shortcuts.error_response(status.UPDATE_PROFILE_FAILED)
+
+    def change_password(self, request):
+        user = request.user
+        serializer = PasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            user.set_password(serializer.data['password'])
+            user.save()
+            return shortcuts.success_response(status.UPDATE_PASSWORD_SUCCESS)
+        else:
+            return shortcuts.error_response(serializer.errors)
 

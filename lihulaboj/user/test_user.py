@@ -11,6 +11,7 @@ class AccountsTestCase(TestCase):
     def setUp(self):
         User.objects.create_user(username='yigo', password='yigo')
         User.objects.create_user(username='yigo2', password='yigo')
+        User.objects.create_user(username='yigo3', password='pwchange')
         self.client = APIClient()
 
     def test_user_login(self):
@@ -81,3 +82,32 @@ class AccountsTestCase(TestCase):
         self.assertEqual(res.status_code, 403)
         js_dic = json.loads(res.content.decode('utf-8'))
         self.assertEqual(js_dic['detail'], 'Authentication credentials were not provided.')
+
+    def test_update_user_password(self):
+        self.client.login(username='yigo3', password='pwchange')
+        res = self.client.post(reverse('change_user_password_api'), {'password': '11111111'})
+        self.assertEqual(res.status_code, 200)
+        js_dic = json.loads(res.content.decode('utf-8'))
+        self.assertEqual(js_dic['data'], status.UPDATE_PASSWORD_SUCCESS)
+        # logout, and login again with old password
+        self.client.logout()
+        self.client.login(username='yigo3', password='pwchange')
+        res = self.client.get(reverse('user_myprofile_api'))
+        self.assertEqual(res.status_code, 403)
+        # logout, and login again with new password
+        self.client.logout()
+        self.client.login(username='yigo3', password='11111111')
+        res = self.client.get(reverse('user_myprofile_api'))
+        self.assertEqual(res.status_code, 200)
+
+    def test_FET_update_user_password_without_auth(self):
+        res = self.client.post(reverse('change_user_password_api'), {'password': '11111111'})
+        self.assertEqual(res.status_code, 403)
+
+    def test_FET_update_user_passwor_too_short(self):
+        self.client.login(username='yigo3', password='pwchange')
+        res = self.client.post(reverse('change_user_password_api'), {'password': '1234567'})
+        self.assertEqual(res.status_code, 200)
+        js_dic = json.loads(res.content.decode('utf-8'))
+        self.assertEqual(js_dic['code'], 1)
+        self.assertEqual(js_dic['data'], {'password' : ['Ensure this field has at least 8 characters.']})
