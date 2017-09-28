@@ -60,6 +60,8 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             self.permission_classes = [IsAuthenticated,]
         elif self.action == 'retrieve_byid':
             self.permission_classes = [IsAdminUser,]
+        elif self.action == 'change_password_byid':
+            self.permission_classes = [IsAdminUser,]
         return super(self.__class__, self).get_permissions()
 
     def retrieve(self, request):
@@ -91,3 +93,18 @@ class UserProfileViewSet(viewsets.ModelViewSet):
         user = get_object_or_404(queryset, pk=pk)
         profile = UserProfileAdminSerializer(user)
         return shortcuts.success_response(profile.data)    
+
+    def change_password_byid(self, request, pk):
+        queryset = User.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        # Cannot edit admin's password
+        if user.is_staff == True:
+            return shortcuts.error_response(status.UPDATE_ADMIN_PASSWORD_NOT_ALLOWED)
+
+        serializer = PasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            user.set_password(serializer.data['password'])
+            user.save()
+            return shortcuts.success_response(status.ADMIN_UPDATE_PASSWORD_SUCCESS)
+        else:
+            return shortcuts.error_response(serializer.errors)
