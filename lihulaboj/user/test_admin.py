@@ -12,6 +12,9 @@ class AdminTestCase(TestCase):
         admin.is_staff = True
         admin.save()
         normal = User.objects.create_user(username='testnormal', password='yigo')
+        admin2 = User.objects.create_user(username='admin2', password='yigo')
+        admin2.is_staff = True
+        admin2.save()
         self.client = APIClient()
 
     def test_get_user_detail_by_id(self):
@@ -85,3 +88,18 @@ class AdminTestCase(TestCase):
         # Change testnormal's password
         res = self.client.post(reverse('change_password_by_id_api', args=['2']), {'password': '11111112'})
         self.assertEqual(res.status_code, 403)
+
+    def test_FET_change_another_admin_password(self):
+        # Login as admin
+        self.client.login(username='admin', password='yigo')
+        # Change admin2's password
+        res = self.client.post(reverse('change_password_by_id_api', args=['3']), {'admin2': '11111112'})
+        self.assertEqual(res.status_code, 200)
+        js_dic = json.loads(res.content.decode('utf-8'))
+        self.assertEqual(js_dic['data'], status.UPDATE_ADMIN_PASSWORD_NOT_ALLOWED)
+        # Try to login admin2 use old password
+        res = self.client.post(reverse('user_login_api'), {'username': 'admin2', 'password': 'yigo'}, format='json')
+        self.assertEqual(res.status_code, 200)
+        js_dic = json.loads(res.content.decode('utf-8'))
+        self.assertEqual(js_dic['code'], 0)
+        self.assertEqual(js_dic['data'], status.LOGIN_SUCCESS)        
