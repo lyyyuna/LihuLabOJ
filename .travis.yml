@@ -18,8 +18,12 @@ before_install:
 install:
   - pip install django --quiet
   - pip install djangorestframework --quiet
+  - pip install coveralls --quiet
 
 script: 
   - python manage.py makemigrations
   - python manage.py migrate
-  - python manage.py test --pattern="test_*.py"
+  - coverage run manage.py test --pattern="test_*.py"
+
+after_success:
+  - coveralls
