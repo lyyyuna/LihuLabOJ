@@ -104,7 +104,7 @@ class AdminTestCase(TestCase):
         self.assertEqual(js_dic['code'], 0)
         self.assertEqual(js_dic['data'], status.LOGIN_SUCCESS)        
 
-    def test_update_user_profile(self):
+    def test_update_user_profile_by_id(self):
         self.client.login(username='admin', password='yigo')
         res = self.client.post(reverse('update_byid_api', args=['2']), {'signature': 'sdssdfsdfsdfsdfdsfdfsd搞一个大新闻dsd'})
         self.assertEqual(res.status_code, 200)
@@ -116,3 +116,31 @@ class AdminTestCase(TestCase):
         self.assertEqual(res.status_code, 200)
         js_dic = json.loads(res.content.decode('utf-8'))
         self.assertEqual(js_dic['data']['signature'], 'sdssdfsdfsdfsdfdsfdfsd搞一个大新闻dsd')
+
+    def test_FET_update_user_profile_by_id_without_auth(self):
+        res = self.client.post(reverse('update_byid_api', args=['2']), {'signature': 'sdssdfsdfsdfsdfdsfdfsd搞一个大新闻dsd'})
+        self.assertEqual(res.status_code, 403)
+
+    def test_FET_update_user_profile_by_id_without_auth(self):
+        self.client.login(username='testnormal', password='yigo')
+        res = self.client.post(reverse('update_byid_api', args=['2']), {'signature': 'sdssdfsdfsdfsdfdsfdfsd搞一个大新闻dsd'})
+        self.assertEqual(res.status_code, 403)
+
+    def test_FET_update_another_admin_profile_by_id(self):
+        self.client.login(username='admin', password='yigo')
+        res = self.client.post(reverse('update_byid_api', args=['3']), {'signature' : 'sffds'})
+        self.assertEqual(res.status_code, 200)
+        js_dic = json.loads(res.content.decode('utf-8'))
+        self.assertEqual(js_dic['data'], status.UPDATE_ADMIN_PROFILE_NOT_ALLOWED)
+
+    def test_disable_normal_user(self):
+        self.client.login(username='admin', password='yigo')
+        res = self.client.post(reverse('update_byid_api', args=['2']), {'is_active' : False})
+        self.assertEqual(res.status_code, 200)
+        self.client.logout()
+        # Try to login with disabled user
+        res = self.client.post(reverse('user_login_api'), {'username': 'testnormal', 'password': 'yigo'}, format='json')
+        self.assertEqual(res.status_code, 200)
+        js_dic = json.loads(res.content.decode('utf-8'))
+        self.assertEqual(js_dic['code'], 1)
+        self.assertEqual(js_dic['data'], status.LOGIN_FAILED)
