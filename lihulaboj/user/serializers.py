@@ -40,7 +40,7 @@ class UserProfileAdminSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         profile_data = validated_data.pop('userprofile', None)
         self.create_or_update_profile(instance, profile_data)
-        return super(AdminUserProfileSerializer, self).update(instance, validated_data)
+        return super(UserProfileAdminSerializer, self).update(instance, validated_data)
 
     def create_or_update_profile(self, user, profile_data):
         profile, created = UserProfile.objects.get_or_create(user=user, defaults=profile_data)

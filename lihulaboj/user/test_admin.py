@@ -103,3 +103,16 @@ class AdminTestCase(TestCase):
         js_dic = json.loads(res.content.decode('utf-8'))
         self.assertEqual(js_dic['code'], 0)
         self.assertEqual(js_dic['data'], status.LOGIN_SUCCESS)        
+
+    def test_update_user_profile(self):
+        self.client.login(username='admin', password='yigo')
+        res = self.client.post(reverse('update_byid_api', args=['2']), {'signature': 'sdssdfsdfsdfsdfdsfdfsd搞一个大新闻dsd'})
+        self.assertEqual(res.status_code, 200)
+        js_dic = json.loads(res.content.decode('utf-8'))
+        self.assertEqual(js_dic['data'], status.UPDATE_PROFILE_SUCCESS)
+        
+        # Get testnormal profile
+        res = self.client.get(reverse('user_profile_by_id_api', args=['2']))
+        self.assertEqual(res.status_code, 200)
+        js_dic = json.loads(res.content.decode('utf-8'))
+        self.assertEqual(js_dic['data']['signature'], 'sdssdfsdfsdfsdfdsfdfsd搞一个大新闻dsd')

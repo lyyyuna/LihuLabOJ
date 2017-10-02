@@ -21,6 +21,9 @@ user_detail_by_id = UserProfileViewSet.as_view({
 admin_change_user_pw = UserProfileViewSet.as_view({
     'post' : 'change_password_byid'
 })
+admin_update_user_profile = UserProfileViewSet.as_view({
+    'post' : 'update_byid'
+})
 
 
 urlpatterns = [
@@ -32,4 +35,5 @@ urlpatterns = [
     url(r'^profile/my/password', change_user_pw, name='change_user_password_api'),
     url(r'^profile/admin/(?P<pk>[0-9]+)$', user_detail_by_id, name='user_profile_by_id_api'),
     url(r'^profile/admin/(?P<pk>[0-9]+)/password', admin_change_user_pw, name='change_password_by_id_api'),
+    url(r'^profile/admin/(?P<pk>[0-9]+)/update', admin_update_user_profile, name='update_byid_api'),
 ]
