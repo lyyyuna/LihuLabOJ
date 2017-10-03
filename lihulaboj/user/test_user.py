@@ -9,20 +9,20 @@ from common import status
 
 class AccountsTestCase(TestCase):
     def setUp(self):
-        User.objects.create_user(username='yigo', password='yigo')
-        User.objects.create_user(username='yigo2', password='yigo')
+        User.objects.create_user(username='yigo', password='yigoyigo')
+        User.objects.create_user(username='yigo2', password='yigoyigo')
         User.objects.create_user(username='yigo3', password='pwchange')
         self.client = APIClient()
 
     def test_user_login(self):
-        res = self.client.post(reverse('user_login_api'), {'username': 'yigo', 'password': 'yigo'}, format='json')
+        res = self.client.post(reverse('user_login_api'), {'username': 'yigo', 'password': 'yigoyigo'}, format='json')
         self.assertEqual(res.status_code, 200)
         js_dic = json.loads(res.content.decode('utf-8'))
         self.assertEqual(js_dic['code'], 0)
         self.assertEqual(js_dic['data'], status.LOGIN_SUCCESS)
 
     def test_FET_user_login_wrong_password(self):
-        res = self.client.post(reverse('user_login_api'), {'username': 'yigo', 'password': 'yigo111'}, format='json')
+        res = self.client.post(reverse('user_login_api'), {'username': 'yigo', 'password': 'yigoyigo111'}, format='json')
         self.assertEqual(res.status_code, 200)
         js_dic = json.loads(res.content.decode('utf-8'))
         self.assertEqual(js_dic['code'], 1)
@@ -36,7 +36,7 @@ class AccountsTestCase(TestCase):
         self.assertEqual(js_dic['data'], status.INPUT_INVALID)
 
     def test_user_logout(self):
-        res = self.client.post(reverse('user_login_api'), {'username': 'yigo', 'password': 'yigo'}, format='json')
+        res = self.client.post(reverse('user_login_api'), {'username': 'yigo', 'password': 'yigoyigo'}, format='json')
         self.assertEqual(res.status_code, 200)
         js_dic = json.loads(res.content.decode('utf-8'))
         self.assertEqual(js_dic['code'], 0)
@@ -54,7 +54,7 @@ class AccountsTestCase(TestCase):
         self.assertEqual(js_dic['detail'], 'Authentication credentials were not provided.')
 
     def test_get_self_profile(self):
-        self.client.login(username='yigo2', password='yigo')
+        self.client.login(username='yigo2', password='yigoyigo')
         res = self.client.get(reverse('user_myprofile_api'))
         self.assertEqual(res.status_code, 200)
         js_dic = json.loads(res.content.decode('utf-8'))
@@ -65,7 +65,7 @@ class AccountsTestCase(TestCase):
         self.assertEqual(res.status_code, 403)
 
     def test_update_user_profile(self):
-        self.client.login(username='yigo', password='yigo')
+        self.client.login(username='yigo', password='yigoyigo')
         res = self.client.post(reverse('edit_user_profile_api'), {'signature': 'sdssdfsdfsdfsdfdsfdfsd搞一个大新闻dsd'})
         self.assertEqual(res.status_code, 200)
         js_dic = json.loads(res.content.decode('utf-8'))

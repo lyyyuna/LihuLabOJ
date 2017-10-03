@@ -8,7 +8,8 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.pagination import PageNumberPagination
 
-from .serializers import UserLoginSerializer, UserProfileSerializer, PasswordSerializer, UserProfileAdminSerializer
+from .serializers import UserLoginSerializer, UserProfileSerializer, UserRegisterSerialzer, PasswordSerializer, UserProfileAdminSerializer
+from .models import Invitation
 
 from common import shortcuts, status
 
@@ -39,6 +40,25 @@ class UserLogoutAPIView(APIView):
     def get(self, request):
         auth.logout(request)
         return shortcuts.success_response(status.LOGOUT_SUCCESS)
+
+
+class UserRegisterAPIView(APIView):
+    def post(self, request):
+        serializer = UserRegisterSerialzer(data=request.data)
+        if serializer.is_valid():
+            data = serializer.data
+            submit_code = data['invitation_code']
+            invitations_queryset = Invitation.objects.all()
+            for code in invitations_queryset:
+                if submit_code == code.code:
+                    User.objects.create_user(username=data['username'], password=data['password'])
+                    return shortcuts.success_response(status.REGISTER_SUCCESS)
+                else:
+                    continue
+            # If run here, mean no invitation code match
+            return shortcuts.error_response(status.REGISTER_CODE_FAILED)
+        else:
+            return shortcuts.error_response(status.REGISTER_FAILED)
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -118,7 +138,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
         # Cannot edit admin's profile
         if user.is_staff == True:
             return shortcuts.error_response(status.UPDATE_ADMIN_PROFILE_NOT_ALLOWED)
-        
+
         serializer = UserProfileAdminSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()

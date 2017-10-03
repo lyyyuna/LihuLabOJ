@@ -5,7 +5,13 @@ from .models import UserProfile
 
 class UserLoginSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=30)
-    password = serializers.CharField(max_length=30)
+    password = serializers.CharField(min_length=8, max_length=20)
+
+
+class UserRegisterSerialzer(serializers.Serializer):
+    username = serializers.CharField(max_length=30)
+    password = serializers.CharField(min_length=8, max_length=20)
+    invitation_code = serializers.CharField(max_length=20)
 
 
 class UserProfileSerializer(serializers.ModelSerializer):

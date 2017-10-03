@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from .views import UserLoginAPIView, UserLogoutAPIView, UserProfileViewSet
+from .views import UserLoginAPIView, UserRegisterAPIView, UserLogoutAPIView, UserProfileViewSet
 from rest_framework import routers
 
 
@@ -29,6 +29,7 @@ admin_update_user_profile = UserProfileViewSet.as_view({
 urlpatterns = [
     url(r'^login', UserLoginAPIView.as_view(), name='user_login_api'),
     url(r'^logout', UserLogoutAPIView.as_view(), name='user_logout_api'),
+    url(r'^register', UserRegisterAPIView.as_view(), name='user_register_api'),
     url(r'^allprofile', user_list, name='user_allprofile_api'),
     url(r'^profile/my$', user_detail, name='user_myprofile_api'),
     url(r'^profile/my/update', edit_user_detail, name='edit_user_profile_api'),
