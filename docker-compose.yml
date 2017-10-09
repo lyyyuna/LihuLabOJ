@@ -6,7 +6,11 @@ services:
       context: .
       dockerfile: Dockerfile
     hostname: web
-    command: ./run_web.sh
+    command: /bin/sh -c "sleep 10 && 
+                          cd lihulaboj && 
+                          python manage.py makemigrations && 
+                          python manage.py migrate && 
+                          python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
