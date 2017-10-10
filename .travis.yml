@@ -13,7 +13,7 @@ python:
 
 before_install:
   - cd lihulaboj
-  - export DJANGO_SETTINGS_MODULE=lihulaboj.settings
+  - export DJANGO_SETTINGS_MODULE=lihulaboj.settings.unittest
 
 install:
   - pip install django --quiet
@@ -23,7 +23,7 @@ install:
 
 script: 
   - python manage.py makemigrations
-  - python manage.py migrate --database=test
+  - python manage.py migrate
   - coverage run --source=./ manage.py test --pattern="test_*.py"
 
 after_success:
