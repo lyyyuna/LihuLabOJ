@@ -16,9 +16,9 @@ services:
     hostname: web
     command: /bin/sh -c "sleep 10 && 
                           cd lihulaboj && 
-                          python manage.py makemigrations && 
-                          python manage.py migrate && 
-                          python manage.py runserver 0.0.0.0:8000"
+                          python manage.py makemigrations --settings=lihulaboj.settings.development&& 
+                          python manage.py migrate --settings=lihulaboj.settings.development&& 
+                          python manage.py runserver 0.0.0.0:8000 --settings=lihulaboj.settings.development"
     volumes:
       - .:/app
     ports:

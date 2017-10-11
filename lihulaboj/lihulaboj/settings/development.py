@@ -1,6 +1,6 @@
 from .base import *
 
-ALLOWED_HOSTS = ['10.0.75.2']
+ALLOWED_HOSTS = ['*']
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '@ee+ba*4l6_9&s4tg!8uoi140xz%2lkk(y%x&aqtirbd!lv1_^'
