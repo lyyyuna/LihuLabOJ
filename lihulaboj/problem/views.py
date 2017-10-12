@@ -1,3 +1,11 @@
-from django.shortcuts import render
+from rest_framework import mixins, viewsets
+from .models import Answser
+from .serializers import AnswserSerializer
 
-# Create your views here.
+
+class AnswserViewSet(mixins.CreateModelMixin,
+                    mixins.ListModelMixin,
+                    mixins.RetrieveModelMixin,
+                    viewsets.GenericViewSet):
+    queryset = Answser.objects.all()
+    serializer_class = AnswserSerializer

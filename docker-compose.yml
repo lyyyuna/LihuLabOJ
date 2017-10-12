@@ -14,11 +14,13 @@ services:
       context: .
       dockerfile: Dockerfile
     hostname: web
+    environment:
+      - DJANGO_SETTINGS_MODULE=lihulaboj.settings.development
     command: /bin/sh -c "sleep 10 && 
                           cd lihulaboj && 
-                          python manage.py makemigrations --settings=lihulaboj.settings.development&& 
-                          python manage.py migrate --settings=lihulaboj.settings.development&& 
-                          python manage.py runserver 0.0.0.0:8000 --settings=lihulaboj.settings.development"
+                          python manage.py makemigrations&& 
+                          python manage.py migrate&& 
+                          python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
@@ -27,3 +29,25 @@ services:
       - db
     depends_on:
       - db
+
+  redis:
+    image: redis
+    hostname: redis
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DJANGO_SETTINGS_MODULE=lihulaboj.settings.development
+    command: /bin/sh -c 'sleep 10 &&
+                        cd lihulaboj &&
+                        su -m myuser -c "celery -A lihulaboj worker -l info"'
+    volumes:
+      - .:/app
+    links:
+      - db
+      - redis
+    depends_on:
+      - db
+      - redis
