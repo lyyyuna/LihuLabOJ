@@ -36,9 +36,9 @@ class Answser(models.Model):
     #problem = models.ForeignKey(Problem, blank=True, null=True, on_delete=models.SET_NULL)
     #author = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
     status = models.CharField(choices=STATUS, max_length=20)
-    source_code = models.TextField(default='eror')
+    source_code = models.TextField(default='error')
     language = models.CharField(default='c', max_length=10)
-    result = models.CharField(choices=RESULT, max_length=20)
+    result = models.TextField(default='error')
     real_time = models.IntegerField(default=0)
     memory = models.IntegerField(default=0)
 
@@ -46,4 +46,4 @@ class Answser(models.Model):
         super(Answser, self).save(*args, **kwargs)
         if self.status == 'pending':
             from .tasks import judge
-            judge.delay(answer_id=self.id)
+            judge.delay(answer_id=self.id, source_code=self.source_code)

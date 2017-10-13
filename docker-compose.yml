@@ -40,6 +40,9 @@ services:
       dockerfile: Dockerfile
     environment:
       - DJANGO_SETTINGS_MODULE=lihulaboj.settings.development
+      - JUDGE_TOKEN=YOUR_TOKEN_HERE
+      - JUDGE_SERVER_IP=10.64.54.60
+      - JUDGE_SERVER_PORT=12358
     command: /bin/sh -c 'sleep 10 &&
                         cd lihulaboj &&
                         su -m myuser -c "celery -A lihulaboj worker -l info"'
