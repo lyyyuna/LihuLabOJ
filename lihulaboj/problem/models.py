@@ -43,8 +43,8 @@ class Answser(models.Model):
     source_code = models.TextField(default='error')
     language = models.CharField(default='c', max_length=10)
     result = models.TextField(default='error')
-    cpu_time = models.IntegerField(default=0)
-    memory = models.IntegerField(default=0)
+    cpu_time = models.IntegerField(default=99999)
+    memory = models.IntegerField(default=99999)
 
     def save(self, *args, **kwargs):
         super(Answser, self).save(*args, **kwargs)
