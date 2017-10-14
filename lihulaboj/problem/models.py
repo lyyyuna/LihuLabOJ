@@ -8,8 +8,12 @@ class Problem(models.Model):
     slug = models.SlugField(default='error')
     content = models.TextField(default='error')
     create_time = models.DateTimeField(auto_now_add=True)
-    max_cpu_time = models.IntegerField(default=1500)
-    max_memory = models.IntegerField(default=128)
+    max_cpu_time = models.IntegerField(default=300)
+    max_memory = models.IntegerField(default=64)
+    input1 = models.TextField(default='error')
+    output1 = models.TextField(default='error')
+    input2 = models.TextField(default='error')
+    output2 = models.TextField(default='error')
 
 
 class Answser(models.Model):
@@ -39,7 +43,7 @@ class Answser(models.Model):
     source_code = models.TextField(default='error')
     language = models.CharField(default='c', max_length=10)
     result = models.TextField(default='error')
-    real_time = models.IntegerField(default=0)
+    cpu_time = models.IntegerField(default=0)
     memory = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):

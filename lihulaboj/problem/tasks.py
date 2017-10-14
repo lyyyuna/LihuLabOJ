@@ -39,7 +39,7 @@ def judge(source_code):
         'language_config' : c_lang_config,
         'max_cpu_time' : 2000,
         'max_memory' : 128 * 1024 * 1024,
-        'test_case_id' : 're',
+        'test_case_id' : 'normal',
         'output' : False
     }
 
