@@ -5,7 +5,7 @@ from django.utils import timezone
 
 class Problem(models.Model):
     title = models.CharField(max_length=30, default='error')
-    slug = models.SlugField(default='error')
+    slug = models.SlugField(default='error', unique=True)
     content = models.TextField(default='error')
     create_time = models.DateTimeField(auto_now_add=True)
     max_cpu_time = models.IntegerField(default=300)
