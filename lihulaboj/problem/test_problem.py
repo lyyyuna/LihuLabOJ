@@ -8,7 +8,7 @@ import json
 from common import status
 
 
-class AdminTestCase(TestCase):
+class ProblemTestCase(TestCase):
     def setUp(self):
         admin = User.objects.create_user(username='admin', password='yigoyigo')
         admin.is_staff = True

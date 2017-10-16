@@ -17,6 +17,12 @@ class ShowProblemSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ListProblemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Problem
+        fields = ('id', 'title', 'pass_num', 'total_num',)
+
+
 class AnswserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Answser

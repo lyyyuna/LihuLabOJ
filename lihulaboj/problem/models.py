@@ -14,6 +14,8 @@ class Problem(models.Model):
     output1 = models.TextField(default='error')
     input2 = models.TextField(default='error')
     output2 = models.TextField(default='error')
+    pass_num = models.IntegerField(default=0)
+    total_num = models.IntegerField(default=0)
 
 
 class Answser(models.Model):
