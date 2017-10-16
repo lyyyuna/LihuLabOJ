@@ -173,7 +173,7 @@ class AdminTestCase(TestCase):
         problem = problem_queryset.first()
         self.assertEqual(problem.title, 'a-b')
 
-    def test_FET_update_a_problem_without_admin(self):
+    def test_FET_update_a_problem_without_auth(self):
         data = {
             'title' : '1234',
         }
