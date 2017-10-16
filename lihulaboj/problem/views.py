@@ -22,6 +22,8 @@ class ProblemViewSet(viewsets.ModelViewSet):
             self.permission_classes = [IsAdminUser,]
         elif self.action == 'update':
             self.permission_classes = [IsAdminUser,]
+        elif self.action == 'delete':
+            self.permission_classes = [IsAdminUser,]
         return super(self.__class__, self).get_permissions()
     
     def edit(self, request):
@@ -35,7 +37,7 @@ class ProblemViewSet(viewsets.ModelViewSet):
     def update(self, request, pk):
         queryset = Problem.objects.all()
         problem = get_object_or_404(queryset, pk=pk)
-        serializer = EditProblemSerializer(problem, data=request.data)
+        serializer = EditProblemSerializer(problem, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return shortcuts.success_response(status.UPDATE_PROBLEM_SUCCESS)
