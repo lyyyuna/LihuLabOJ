@@ -17,6 +17,9 @@ class Problem(models.Model):
     pass_num = models.IntegerField(default=0)
     total_num = models.IntegerField(default=0)
 
+    def __str__(self):
+        return self.slug
+
 
 class Answser(models.Model):
     STATUS = (

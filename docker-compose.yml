@@ -16,10 +16,14 @@ services:
     hostname: web
     environment:
       - DJANGO_SETTINGS_MODULE=lihulaboj.settings.development
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=admin
+      - ADMIN_EMAIL=admin@admin.com
     command: /bin/sh -c "sleep 10 && 
                           cd lihulaboj && 
                           python manage.py makemigrations&& 
                           python manage.py migrate&& 
+                          python manage.py addadmin&&
                           python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
