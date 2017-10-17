@@ -44,4 +44,6 @@ class Answser(models.Model):
         super(Answser, self).save(*args, **kwargs)
         if self.status == 'pending':
             from .tasks import judge
-            judge.delay(answer_id=self.id, source_code=self.source_code)
+            max_cpu_time = self.problem.max_cpu_time
+            max_memory = self.problem.memory * 1024 * 1024
+            judge.delay(answer_id=self.id, source_code=self.source_code, language=self.language, max_cpu_time=max_cpu_time, max_memory=max_memory, test_case_id=self.problem.slug)

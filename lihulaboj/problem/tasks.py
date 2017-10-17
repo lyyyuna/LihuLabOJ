@@ -26,7 +26,7 @@ def update_answer(fn):
 
 @shared_task
 @update_answer
-def judge(source_code):
+def judge(source_code, language, max_cpu_time, max_memory, test_case_id):
     token = os.environ.get('JUDGE_TOKEN')
     headers = {'X-Judge-Server-Token' : hashlib.sha256(token.encode('utf-8')).hexdigest()}
 
@@ -36,10 +36,10 @@ def judge(source_code):
     
     args = {
         'src' : source_code,
-        'language_config' : c_lang_config,
-        'max_cpu_time' : 2000,
-        'max_memory' : 128 * 1024 * 1024,
-        'test_case_id' : 'normal',
+        'language_config' : lang_config[language], # if not predefined lang, raise exception
+        'max_cpu_time' : max_cpu_time,
+        'max_memory' : max_memory,
+        'test_case_id' : test_case_id,
         'output' : False
     }
 

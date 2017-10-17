@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from rest_framework import mixins, viewsets
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from .models import Answser, Problem
 from .serializers import AnswserSerializer, EditProblemSerializer, \
-        ShowProblemSerializer, ListProblemSerializer, SubmitAnswerSerializer
+        ShowProblemSerializer, ListProblemSerializer, SubmitAnswerSerializer, \
+        StatusAnswerSerializer
 from common import shortcuts, status
 
 
@@ -62,10 +63,30 @@ class AnswserViewSet(viewsets.ModelViewSet):
     queryset = Answser.objects.all()
     serializer_class = AnswserSerializer
 
+    def get_permissions(self):
+        if self.action == 'submit':
+            self.permission_classes = [IsAuthenticated,]
+        return super(self.__class__, self).get_permissions()
+
     def submit(self, request, problem_id):
         serializer = SubmitAnswerSerializer(data=request.data)
         if serializer.is_valid():
             queryset = Problem.objects.all()
             problem = get_object_or_404(queryset, pk=problem_id)
             author = request.user
-            
+            source_code = request.data['source_code']
+            language = request.data['language']
+            answer = Answser.objects.create(source_code=source_code, 
+                                    language=language,
+                                    author=author,
+                                    problem=problem,
+                                    status='pending')
+            return shortcuts.success_response(answer.id)
+        else:
+            return shortcuts.error_response(status.SUBMIT_ANSWER_FAILED)
+
+    def status(self, request, answer_id):
+        queryset = Answser.objects.all()
+        answer = get_object_or_404(queryset, pk=answer_id)
+        serializer = StatusAnswerSerializer(answer)
+        return shortcuts.success_response(serializer.data)

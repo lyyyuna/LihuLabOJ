@@ -33,3 +33,9 @@ class SubmitAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answser
         fields = ('source_code', 'language',)
+
+
+class StatusAnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answser
+        fields = ('status', 'result', 'cpu_time', 'memory',)
