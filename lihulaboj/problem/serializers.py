@@ -23,7 +23,13 @@ class ListProblemSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'pass_num', 'total_num',)
 
 
-class AnswserSerializer(serializers.HyperlinkedModelSerializer):
+class AnswserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answser
         fields = '__all__'
+
+
+class SubmitAnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answser
+        fields = ('source_code', 'language',)

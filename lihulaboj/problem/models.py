@@ -29,27 +29,16 @@ class Answser(models.Model):
         ('failed', 'failed'),
     )
 
-    RESULT = (
-        ('N/A', 'N/A'),
-        ('WRONG_ANSWER', 'WRONG_ANSWER'),
-        ('SUCCESS', 'SUCCESS'),
-        ('CPU_TIME_LIMIT_EXCEEDED', 'CPU_TIME_LIMIT_EXCEEDED'),
-        ('REAL_TIME_LIMIT_EXCEEDED', 'REAL_TIME_LIMIT_EXCEEDED'),
-        ('MEMORY_LIMIT_EXCEEDED', 'MEMORY_LIMIT_EXCEEDED'),
-        ('RUNTIME_ERROR', 'RUNTIME_ERROR'),
-        ('SYSTEM_ERROR', 'SYSTEM_ERROR')
-    )
-
     create_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
-    #problem = models.ForeignKey(Problem, blank=True, null=True, on_delete=models.SET_NULL)
-    #author = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
+    problem = models.ForeignKey(Problem, blank=True, null=True, on_delete=models.SET_NULL)
+    author = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
     status = models.CharField(choices=STATUS, max_length=20)
     source_code = models.TextField(default='error')
-    language = models.CharField(default='c', max_length=10)
-    result = models.TextField(default='error')
-    cpu_time = models.IntegerField(default=99999)
-    memory = models.IntegerField(default=99999)
+    language = models.IntegerField(default=0)
+    result = models.IntegerField(default=-1)
+    cpu_time = models.IntegerField(default=0)
+    memory = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         super(Answser, self).save(*args, **kwargs)

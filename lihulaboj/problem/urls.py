@@ -27,7 +27,7 @@ delete_problem = ProblemViewSet.as_view({
 })
 
 urlpatterns = [
-    #url(r'^', include(router.urls)),
+    url(r'^', include(router.urls)),
     url(r'^all', problem_list, name='problem_list_api'),
     url(r'^(?P<pk>[0-9]+)/detail', problem_detail, name='problem_detail_api'),
     url(r'^admin/create', create_problem, name='create_problem_api'),

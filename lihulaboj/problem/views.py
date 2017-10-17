@@ -4,7 +4,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAdminUser
 from .models import Answser, Problem
 from .serializers import AnswserSerializer, EditProblemSerializer, \
-        ShowProblemSerializer, ListProblemSerializer
+        ShowProblemSerializer, ListProblemSerializer, SubmitAnswerSerializer
 from common import shortcuts, status
 
 
@@ -58,9 +58,14 @@ class ProblemViewSet(viewsets.ModelViewSet):
         return shortcuts.success_response(problem_serializer.data)
 
 
-class AnswserViewSet(mixins.CreateModelMixin,
-                    mixins.ListModelMixin,
-                    mixins.RetrieveModelMixin,
-                    viewsets.GenericViewSet):
+class AnswserViewSet(viewsets.ModelViewSet):
     queryset = Answser.objects.all()
     serializer_class = AnswserSerializer
+
+    def submit(self, request, problem_id):
+        serializer = SubmitAnswerSerializer(data=request.data)
+        if serializer.is_valid():
+            queryset = Problem.objects.all()
+            problem = get_object_or_404(queryset, pk=problem_id)
+            author = request.user
+            
