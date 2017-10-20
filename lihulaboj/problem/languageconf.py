@@ -88,9 +88,9 @@ JAVA = 2
 PY2 = 3
 PY3 = 4
 lang_config = {
-    1 : c_lang_config,
-    2 : cpp_lang_config,
-    3 : java_lang_config,
-    4 : py2_lang_config,
-    5 : py3_lang_config
+    '1' : c_lang_config,
+    '2' : cpp_lang_config,
+    '3' : java_lang_config,
+    '4' : py2_lang_config,
+    '5' : py3_lang_config
 }

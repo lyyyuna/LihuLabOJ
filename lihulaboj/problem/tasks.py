@@ -4,6 +4,7 @@ from .models import Answser
 from functools import wraps
 from .languageconf import *
 import requests, os, hashlib
+import json
 
 
 def update_answer(fn):
@@ -14,7 +15,12 @@ def update_answer(fn):
         answer.save()
         try:
             result = fn(*args, **kwargs)
-            answer.result = result
+            result_dic = json.loads(result)
+            
+            result_data = result_dic['data'][0]
+            answer.result = result_data['result']
+            answer.memory = result_data['memory']
+            answer.cpu_time = result_data['cpu_time']
             answer.status = 'finished'
             answer.save()
         except Exception as e:
@@ -36,7 +42,7 @@ def judge(source_code, language, max_cpu_time, max_memory, test_case_id):
     
     args = {
         'src' : source_code,
-        'language_config' : lang_config[language], # if not predefined lang, raise exception
+        'language_config' : lang_config[str(language)], # if not predefined lang, raise exception
         'max_cpu_time' : max_cpu_time,
         'max_memory' : max_memory,
         'test_case_id' : test_case_id,
