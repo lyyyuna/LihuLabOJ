@@ -30,7 +30,7 @@ def judgeOne(realInput, expectedOutput, script):
                     max_process_number=20,
                     max_output_size=2048,
                     max_stack=32 * 1024 * 1024,
-                    exe_path="/usr/bin/python",
+                    exe_path="/usr/bin/python3",
                     input_path=inputFile,
                     output_path=outputFile,
                     error_path=outputFile,
