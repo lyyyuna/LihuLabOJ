@@ -76,11 +76,12 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             self.permission_classes = [IsAuthenticated,]
         elif self.action == 'retrieve':
             self.permission_classes = [IsAuthenticated,]
+        return super(self.__class__, self).get_permissions()
 
     def retrieve(self, request):
         user = request.user
         serializer = UserProfileSerializer(user)
-        return successResponse('get profile success')
+        return successResponse(serializer.data)
 
     def update(self, request):
         user = request.user
