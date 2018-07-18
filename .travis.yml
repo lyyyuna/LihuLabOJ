@@ -1,0 +1,30 @@
+language: python
+
+notifications:
+  email:
+    recipients:
+      - lyyyuna@outlook.com
+    on_success: always
+    on_failure: always
+
+python:
+  - "2.7"
+
+before_install:
+  - cd OnlineJudge
+  - export DJANGO_SETTINGS_MODULE=oj.settings.unittest
+
+install:
+  - pip install "django<2" --quiet
+  - pip install djangorestframework --quiet
+  - pip install coveralls --quiet
+  - pip install psycopg2 --quiet
+  - pip install celery --quiet
+
+script: 
+  - python manage.py makemigrations
+  - python manage.py migrate
+  - coverage run --source=./ manage.py test --pattern="test_*.py"
+
+after_success:
+  - coveralls

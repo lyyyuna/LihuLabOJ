@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import viewsets
 
 from .serializers import *
 from common.shortcuts import *
@@ -54,11 +55,48 @@ class UserRegisterAPIView(APIView):
                 if userkey == ackey.key:
                     if User.objects.filter(username=data['username']).exists():
                         return errorResponse('username already exists')
-                    User.objects.create_user(username=data['username'], password=data['password'])
+                    User.objects.create_user(username=data['username'], 
+                                             password=data['password'])
                     return successResponse('register success')
                 else:
                     continue
             # if run here, means userkey != ackey
             return errorResponse('wrong ac key')
+        else:
+            return errorResponse('input invalid')
+
+
+class UserProfileViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+
+    def get_permissions(self):
+        if self.action == 'update':
+            self.permission_classes = [IsAuthenticated,]
+        elif self.action == 'change_password':
+            self.permission_classes = [IsAuthenticated,]
+        elif self.action == 'retrieve':
+            self.permission_classes = [IsAuthenticated,]
+
+    def retrieve(self, request):
+        user = request.user
+        serializer = UserProfileSerializer(user)
+        return successResponse('get profile success')
+
+    def update(self, request):
+        user = request.user
+        serializer = UserProfileUpdateSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return successResponse('update profile success')
+        else:
+            return errorResponse('input invalid')
+
+    def change_password(self, request):
+        user = request.user
+        serializer = PasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            user.set_password(serializer.data['password'])
+            user.save()
+            return successResponse('update password success')
         else:
             return errorResponse('input invalid')
