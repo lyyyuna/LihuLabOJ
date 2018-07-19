@@ -27,7 +27,7 @@ class OJProblemViewSet(viewsets.ModelViewSet):
         else:
             return ListProblemSerializer
 
-    def detail(self, request, pk):
+    def retrieve(self, request, pk):
         queryset = OJProblem.objects.all()
         problem = get_object_or_404(queryset, pk=pk)
         serializer = ShowProblemDetailSerializer(problem)
@@ -49,7 +49,7 @@ class OJAnswerViewSet(viewsets.ModelViewSet):
         return super(self.__class__, self).get_permissions()
 
     ## user can only self answer
-    def detail(self, request, pk):
+    def retrieve(self, request, pk):
         queryset = OJAnswer.objects.filter(submitter=request.user)
         answer = get_object_or_404(queryset, pk=pk)
         serializer = AnswerSerializer(answer)
