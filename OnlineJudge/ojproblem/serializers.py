@@ -7,7 +7,7 @@ from .models import *
 class ShowProblemDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = OJProblem
-        fields = '__all__'
+        exclude = ('input2', 'output2',)
 
 
 class ListProblemSerializer(serializers.ModelSerializer):
@@ -25,7 +25,11 @@ class ListAuthProblemSerializer(serializers.ModelSerializer):
 
     def get_pass_status(self, obj):
         if OJUserAnswerAggr.objects.filter(problem=obj, submitter=self.user).exists():
-            return 'pass'
+            uaggr = OJUserAnswerAggr.objects.get(problem=obj, submitter=self.user)
+            if uaggr.result == 0:
+                return 'pass'
+            else:
+                return 'failed' 
         else:
             return 'N/A'
 
