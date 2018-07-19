@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'ojuser.apps.OjuserConfig',
+    'ojproblem.apps.OjproblemConfig'
 ]
 
 MIDDLEWARE = [
