@@ -42,7 +42,7 @@ class OJAnswerViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action == 'submit':
             self.permission_classes = [IsAuthenticated,]
-        if self.action == 'detail':
+        if self.action == 'retrieve':
             self.permission_classes = [IsAuthenticated,]
         if self.action == 'myanswers':
             self.permission_classes = [IsAuthenticated,]
