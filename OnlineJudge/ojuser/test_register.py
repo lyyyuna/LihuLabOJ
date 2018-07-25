@@ -35,6 +35,12 @@ class AccountRegisterTest(TestCase):
         self.assertEqual(js_dic['code'], 0)
         self.assertEqual(js_dic['data'], 'login success')
 
+        # should also create user's profile model
+        res = self.client.get(reverse('user_myprofile_api'))
+        self.assertEqual(res.status_code, 200)
+        js_dic = json.loads(res.content)
+        self.assertEqual(js_dic['data']['username'], 'testnormal1')
+
     def test_FET_register_with_wrong_activiation_code(self):
         res = self.client.post(reverse('user_register_api'),
                             {'username' : 'testnormal1', 

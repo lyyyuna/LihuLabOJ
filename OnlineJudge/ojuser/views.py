@@ -56,8 +56,9 @@ class UserRegisterAPIView(APIView):
                 if userkey == ackey.key:
                     if User.objects.filter(username=data['username']).exists():
                         return errorResponse('username already exists')
-                    User.objects.create_user(username=data['username'], 
+                    u = User.objects.create_user(username=data['username'], 
                                              password=data['password'])
+                    OJUserProfile.objects.create(user=u)
                     return successResponse('register success')
                 else:
                     continue
