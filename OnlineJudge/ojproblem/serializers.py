@@ -42,3 +42,9 @@ class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = OJAnswer
         exclude = ('raw_result',)
+
+
+class AnswerRankSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OJUserAnswerAggr
+        exclude = ('answer', 'result',)

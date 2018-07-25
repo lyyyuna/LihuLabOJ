@@ -65,3 +65,20 @@ class OJAnswerViewSet(viewsets.ModelViewSet):
         
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+
+class OJRanksViewSet(viewsets.ModelViewSet):
+    queryset = OJUserAnswerAggr.objects.all().order_by('-id')
+    pagination_class = StandardResultsSetPagination
+    serializer_class = AnswerRankSerializer
+
+    def ranks(self, request, pk):
+        queryset = OJUserAnswerAggr.objects.filter(problem__id=pk, result=0).order_by('cpu', 'memory')
+        
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)

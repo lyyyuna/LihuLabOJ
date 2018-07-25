@@ -67,4 +67,4 @@ class OJAnswerTestCase(TestCase):
 
     def test_get_myanswer_list_without_auth(self):
         res = self.client.get(reverse('problem_myanswer_list_api', args=['1']))
-        self.assertEqual(res.status_code, 403)   
+        self.assertEqual(res.status_code, 403)

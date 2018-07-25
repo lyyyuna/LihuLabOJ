@@ -9,6 +9,11 @@ class OJProblemModelAdmin(admin.ModelAdmin):
     search_fields = ('id',)
 
 
+class OJAnswerModelAdmin(admin.ModelAdmin):
+    list_display = ('id', 'update_time', 'problem', 'submitter', 'status', 'result')
+    search_fields = ('id',)
+
+
 class OJUserAnswerAggrModelAdmin(admin.ModelAdmin):
     list_display = ('result', 'update_time', 'problem', 'submitter')
     search_fields = ('submitter',)
@@ -16,3 +21,4 @@ class OJUserAnswerAggrModelAdmin(admin.ModelAdmin):
 
 admin.site.register(OJProblem, OJProblemModelAdmin)
 admin.site.register(OJUserAnswerAggr, OJUserAnswerAggrModelAdmin)
+admin.site.register(OJAnswer, OJAnswerModelAdmin)

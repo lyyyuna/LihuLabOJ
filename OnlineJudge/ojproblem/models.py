@@ -18,7 +18,7 @@ class OJProblem(models.Model):
     total_num = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.title
+        return str(self.id)
 
 
 class OJAnswer(models.Model):
@@ -33,10 +33,15 @@ class OJAnswer(models.Model):
     cpu = models.IntegerField(default=-1)
     memory = models.IntegerField(default=-1)
 
+    def __str__(self):
+        return str(self.id)
+
 
 class OJUserAnswerAggr(models.Model):
     result = models.IntegerField(default=-1)
     update_time = models.DateTimeField(auto_now=True)
     problem = models.ForeignKey(OJProblem, blank=True, null=True, on_delete=models.SET_NULL)
+    answer = models.ForeignKey(OJAnswer, blank=True, null=True, on_delete=models.SET_NULL)
     submitter = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
-    submit_time = models.IntegerField(default=0)
+    cpu = models.IntegerField(default=-1)
+    memory = models.IntegerField(default=-1)
