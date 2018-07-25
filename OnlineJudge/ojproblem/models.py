@@ -30,8 +30,8 @@ class OJAnswer(models.Model):
     source_code = models.CharField(max_length=2048)
     result = models.IntegerField(default=-1)
     raw_result = models.CharField(max_length=2048)
-    cpu = models.IntegerField(default=-1)
-    memory = models.IntegerField(default=-1)
+    cpu = models.IntegerField(default=-1, db_index=True)
+    memory = models.IntegerField(default=-1, db_index=True)
 
     def __str__(self):
         return str(self.id)

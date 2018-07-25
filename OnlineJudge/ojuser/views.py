@@ -7,6 +7,7 @@ from django.contrib.auth.models import User, AnonymousUser
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets
@@ -101,3 +102,14 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             return successResponse('update password success')
         else:
             return errorResponse('input invalid')
+
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 20
+    page_size_query_param = 'page_size'
+
+
+class OJUserRanksViewSet(viewsets.ModelViewSet):
+    queryset = OJUserProfile.objects.all().order_by('-pass_num', 'total_num')
+    pagination_class = StandardResultsSetPagination
+    serializer_class = UserRankSerializer

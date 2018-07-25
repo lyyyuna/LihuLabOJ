@@ -43,3 +43,9 @@ class UserProfileUpdateSerializer(serializers.ModelSerializer):
 
 class PasswordSerializer(serializers.Serializer):
     password = serializers.CharField(min_length=8, max_length=20)
+
+
+class UserRankSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OJUserProfile
+        fields = ('user', 'signature', 'pass_num', 'total_num',)

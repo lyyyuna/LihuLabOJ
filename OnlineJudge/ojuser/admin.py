@@ -9,4 +9,9 @@ class ActiviationCodeModelAdmin(admin.ModelAdmin):
     list_display = ('key',)
 
 
+class UserProfileModelAdmin(admin.ModelAdmin):
+    list_display = ('user', 'signature', 'pass_num', 'total_num',)
+
+
 admin.site.register(ActiviationCode, ActiviationCodeModelAdmin)
+admin.site.register(OJUserProfile, UserProfileModelAdmin)
