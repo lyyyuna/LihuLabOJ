@@ -14,3 +14,4 @@ class OJUserProfile(models.Model):
 
 class ActiviationCode(models.Model):
     key = models.CharField(max_length=20, default='error')
+    count = models.IntegerField(default=10)

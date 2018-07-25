@@ -53,12 +53,16 @@ class UserRegisterAPIView(APIView):
             userkey = data['activiation_code']
             ackey_queryset = ActiviationCode.objects.all()
             for ackey in ackey_queryset:
+                if ackey.count == 0:
+                    continue
                 if userkey == ackey.key:
                     if User.objects.filter(username=data['username']).exists():
                         return errorResponse('username already exists')
                     u = User.objects.create_user(username=data['username'], 
                                              password=data['password'])
                     OJUserProfile.objects.create(user=u)
+                    ackey.count = ackey.count - 1
+                    ackey.save()
                     return successResponse('register success')
                 else:
                     continue

@@ -10,7 +10,7 @@ from .models import *
 class AccountRegisterTest(TestCase):
     def setUp(self):
         User.objects.create_user(username='yigo', password='yigoyigo')
-        ActiviationCode.objects.create(key='abc123def')
+        ActiviationCode.objects.create(key='abc123def', count=2)
         self.client = APIClient()
 
     def test_register_with_activiation_code(self):
@@ -81,3 +81,35 @@ class AccountRegisterTest(TestCase):
         js_dic = json.loads(res.content)
         self.assertEqual(js_dic['code'], 1)
         self.assertEqual(js_dic['data'], 'username already exists')
+
+    def test_FET_register_with_same_ac_3_times(self):
+        ActiviationCode.objects.create(key='testformul', count=2)
+        # register a new account
+        res = self.client.post(reverse('user_register_api'),
+                            {'username' : 'testnormal1', 
+                             'password' : 'yur$$24.',
+                             'activiation_code' : 'testformul'})
+        self.assertEqual(res.status_code, 200)
+        js_dic = json.loads(res.content)
+        self.assertEqual(js_dic['code'], 0)
+        self.assertEqual(js_dic['data'], 'register success')
+
+        # register a new account
+        res = self.client.post(reverse('user_register_api'),
+                            {'username' : 'testnormal2', 
+                             'password' : 'yur$$24.',
+                             'activiation_code' : 'testformul'})
+        self.assertEqual(res.status_code, 200)
+        js_dic = json.loads(res.content)
+        self.assertEqual(js_dic['code'], 0)
+        self.assertEqual(js_dic['data'], 'register success')
+
+        # register a new account
+        res = self.client.post(reverse('user_register_api'),
+                            {'username' : 'testnormal3', 
+                             'password' : 'yur$$24.',
+                             'activiation_code' : 'testformul'})
+        self.assertEqual(res.status_code, 200)
+        js_dic = json.loads(res.content)
+        self.assertEqual(js_dic['code'], 1)
+        self.assertEqual(js_dic['data'], 'wrong ac key')
