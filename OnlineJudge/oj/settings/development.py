@@ -16,15 +16,17 @@ DATABASES = {
         'PASSWORD': os.environ.get('DB_ENV_POSTGRES_PASSWORD', ''),
         'HOST': os.environ.get('DB_ENV_ADDR', '127.0.0.1'),
         'PORT': os.environ.get('DB_ENV_PORT', '5432'),
+        'CONN_MAX_AGE' : 0,
     },
 }
 
-# REDIS_PORT = 6379
-# REDIS_DB = 0
-# REDIS_HOST = os.environ.get('REDIS_PORT_6379_TCP_ADDR', 'redis')
+rabbituser = os.environ.get('RABBIT_USER')
+rabbitpass = os.environ.get('RABBIT_PASS')
+rabbithost = os.environ.get('RABBIT_HOST')
+rabbitport = os.environ.get('RABBIT_PORT')
+rabbitvhost = os.environ.get('RABBIT_VHOST2')
+CELERY_BROKER_URL  = 'amqp://{}:{}@{}:{}/{}'.format(rabbituser, rabbitpass, rabbithost, rabbitport, rabbitvhost)
 
-# CELERY_BROKER_URL = 'redis://%s:%d/%d' % (REDIS_HOST, REDIS_PORT,REDIS_DB)
-
-# CELERY_RESULT_BACKEND = 'rpc://'
+CELERY_RESULT_BACKEND = 'rpc://'
 # CELERY_REDIS_MAX_CONNECTIONS = 2
 CELERY_TASK_RESULT_EXPIRES = 300

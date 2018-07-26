@@ -48,3 +48,11 @@ class AnswerRankSerializer(serializers.ModelSerializer):
     class Meta:
         model = OJUserAnswerAggr
         fields = ('id', 'update_time', 'problem', 'answer', 'cpu', 'memory')
+
+
+class SubmitAnswerSerializer(serializers.ModelSerializer):
+    source_code = serializers.CharField(max_length=2048)
+
+    class Meta:
+        model = OJAnswer
+        fields = ('source_code',)

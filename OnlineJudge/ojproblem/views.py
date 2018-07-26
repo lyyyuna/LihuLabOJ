@@ -66,6 +66,22 @@ class OJAnswerViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
+    def submit(self, request, pk):
+        queryset = OJProblem.objects.all()
+        p = get_object_or_404(queryset, pk=pk)
+        serializer = SubmitAnswerSerializer(data=request.data)
+        if serializer.is_valid():
+            pass
+        else:
+            return errorResponse('input invalid')
+
+        OJAnswer.objects.create(problem=p,
+                                submitter=request.user,
+                                source_code=request.data['source_code'])
+        from tasks import judge
+        judge.delay(1, request.data['source_code'])
+        return errorResponse('submit success')
+
 
 class OJRanksViewSet(viewsets.ModelViewSet):
     queryset = OJUserAnswerAggr.objects.all().order_by('-id')
