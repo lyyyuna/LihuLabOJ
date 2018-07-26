@@ -47,4 +47,4 @@ class AnswerSerializer(serializers.ModelSerializer):
 class AnswerRankSerializer(serializers.ModelSerializer):
     class Meta:
         model = OJUserAnswerAggr
-        exclude = ('answer', 'result',)
+        fields = ('id', 'update_time', 'problem', 'answer', 'cpu', 'memory')
