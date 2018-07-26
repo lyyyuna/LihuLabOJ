@@ -48,7 +48,7 @@ class OJAnswerViewSet(viewsets.ModelViewSet):
             self.permission_classes = [IsAuthenticated,]
         return super(self.__class__, self).get_permissions()
 
-    ## user can only self answer
+    ## user can only see his own answers
     def retrieve(self, request, pk):
         queryset = OJAnswer.objects.filter(submitter=request.user)
         answer = get_object_or_404(queryset, pk=pk)
