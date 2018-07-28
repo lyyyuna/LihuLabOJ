@@ -13,7 +13,7 @@ uri = 'amqp://{}:{}@{}:{}/{}'.format(rabbituser, rabbitpass, rabbithost, rabbitp
 app = Celery('tasks', broker=uri, backend='rpc://')
 
 app.conf.update(
-    worker_max_tasks_per_child = 20
+    worker_max_tasks_per_child = 20,
 )
 
 
