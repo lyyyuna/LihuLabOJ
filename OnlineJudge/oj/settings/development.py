@@ -30,3 +30,4 @@ CELERY_BROKER_URL  = 'amqp://{}:{}@{}:{}/{}'.format(rabbituser, rabbitpass, rabb
 CELERY_RESULT_BACKEND = 'rpc://'
 # CELERY_REDIS_MAX_CONNECTIONS = 2
 CELERY_TASK_RESULT_EXPIRES = 300
+CELERYD_MAX_TASKS_PER_CHILD = 100

@@ -93,3 +93,6 @@ ENV/
 
 # docker
 docker-compose.development.yml
+
+# production
+production.py

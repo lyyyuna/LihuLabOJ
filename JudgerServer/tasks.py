@@ -12,6 +12,11 @@ rabbitvhost = os.environ.get('RABBIT_VHOST')
 uri = 'amqp://{}:{}@{}:{}/{}'.format(rabbituser, rabbitpass, rabbithost, rabbitport, rabbitvhost)
 app = Celery('tasks', broker=uri, backend='rpc://')
 
+app.conf.update(
+    worker_max_tasks_per_child = 20
+)
+
+
 @app.task
 def judgeOne(realInput, expectedOutput, script):
     a = uuid.uuid1()

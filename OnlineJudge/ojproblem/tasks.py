@@ -3,7 +3,7 @@ from celery import shared_task
 from .models import *
 from functools import wraps
 import json
-import gevent
+import time
 from ojuser.models import *
 from django.contrib.auth.models import User
 
@@ -74,6 +74,8 @@ def judge(source_code, input2, output2):
     # so I use this way instead
     cnt = 20
     while not res.ready() and cnt>0:
-        gevent.sleep(1)
+        time.sleep(1)
         cnt -= 1
+    print cnt
+    print res.result
     return res.result
