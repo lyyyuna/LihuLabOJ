@@ -10,6 +10,9 @@ from rest_framework.response import Response
 from .models import *
 from .serializers import *
 from common.shortcuts import *
+from ojuser.models import *
+from django.utils import timezone
+from datetime import timedelta
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -69,18 +72,33 @@ class OJAnswerViewSet(viewsets.ModelViewSet):
     def submit(self, request, pk):
         queryset = OJProblem.objects.all()
         p = get_object_or_404(queryset, pk=pk)
+
+        owner = request.user
+        delta = timezone.now() - owner.ojuserprofile.last_submit_time
+        delta2 = timedelta(0, 10)
+        # should longer than 10 seconds
+        if delta < delta2:
+            return errorResponse('submit too fast')
+            
         serializer = SubmitAnswerSerializer(data=request.data)
         if serializer.is_valid():
             pass
         else:
             return errorResponse('input invalid')
 
-        OJAnswer.objects.create(problem=p,
-                                submitter=request.user,
+        a = OJAnswer.objects.create(problem=p,
+                                submitter=owner,
                                 source_code=request.data['source_code'])
+        # update last submit time
+        profile = owner.ojuserprofile
+        profile.last_submit_time = timezone.now()
+        profile.save()
+        # add count for current problem
+        p.total_num += 1
+        p.save()
         from tasks import judge
-        judge.delay(1, request.data['source_code'])
-        return errorResponse('submit success')
+        judge.delay(a.id, p.id, owner.id, request.data['source_code'], p.input2, p.output2)
+        return successResponse('submit success')
 
 
 class OJRanksViewSet(viewsets.ModelViewSet):

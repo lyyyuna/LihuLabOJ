@@ -29,10 +29,17 @@ class OJAnswer(models.Model):
     status = models.CharField(max_length=20, default='pending')
     source_code = models.TextField(max_length=2048)
     result = models.IntegerField(default=-1)
-    raw_result = models.CharField(max_length=2048)
+    raw_result = models.TextField()
     cpu = models.IntegerField(default=-1, db_index=True)
     memory = models.IntegerField(default=-1, db_index=True)
-
+    runtime = models.IntegerField(default=-10)
+    # WRONG_ANSWER = -1 (this means the process exited normally, but the answer is wrong)
+    # SUCCESS = 0 (this means the answer is accepted)
+    # CPU_TIME_LIMIT_EXCEEDED = 1
+    # REAL_TIME_LIMIT_EXCEEDED = 2
+    # MEMORY_LIMIT_EXCEEDED = 3
+    # RUNTIME_ERROR = 4
+    # SYSTEM_ERROR = 5
     def __str__(self):
         return str(self.id)
 
@@ -40,8 +47,8 @@ class OJAnswer(models.Model):
 class OJUserAnswerAggr(models.Model):
     result = models.IntegerField(default=-1)
     update_time = models.DateTimeField(auto_now=True)
-    problem = models.ForeignKey(OJProblem, blank=True, null=True, on_delete=models.SET_NULL)
-    answer = models.ForeignKey(OJAnswer, blank=True, null=True, on_delete=models.SET_NULL)
-    submitter = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
+    problem = models.ForeignKey(OJProblem, blank=True, null=True, on_delete=models.SET_NULL, db_index=True)
+    answer = models.ForeignKey(OJAnswer, blank=True, null=True, on_delete=models.SET_NULL, db_index=True)
+    submitter = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL, db_index=True)
     cpu = models.IntegerField(default=-1)
     memory = models.IntegerField(default=-1)

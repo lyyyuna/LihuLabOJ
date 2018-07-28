@@ -10,7 +10,7 @@ class ActiviationCodeModelAdmin(admin.ModelAdmin):
 
 
 class UserProfileModelAdmin(admin.ModelAdmin):
-    list_display = ('user', 'signature', 'pass_num', 'total_num',)
+    list_display = ('user', 'signature', 'pass_num', 'total_num', 'last_submit_time',)
 
 
 admin.site.register(ActiviationCode, ActiviationCodeModelAdmin)
