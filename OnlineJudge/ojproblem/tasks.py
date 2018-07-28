@@ -1,10 +1,9 @@
 from __future__ import absolute_import, unicode_literals
 from celery import shared_task
-from celery.result import allow_join_result
 from .models import *
 from functools import wraps
 import json
-import time
+import gevent
 from ojuser.models import *
 from django.contrib.auth.models import User
 
@@ -36,14 +35,19 @@ def update_answer(fn):
                 uaggr, created = OJUserAnswerAggr.objects.get_or_create(problem=p, submitter=owner)
                 if created:
                     uaggr.answer = answer
+                    uaggr.cpu = answer.cpu
+                    uaggr.memory = answer.memory
                     uaggr.save()
                 else:
-                    oriAnswer = uaggr.answer
-                    if answer.cpu < oriAnswer.cpu:
+                    if answer.cpu < uaggr.cpu:
                         uaggr.answer = answer
+                        uaggr.cpu = answer.cpu
+                        uaggr.memory = answer.memory
                         uaggr.save()
-                    elif answer.cpu == oriAnswer.cpu and answer.memory < oriAnswer.memory:
+                    elif answer.cpu == uaggr.cpu and answer.memory < uaggr.memory:
                         uaggr.answer = answer
+                        uaggr.cpu = answer.cpu
+                        uaggr.memory = answer.memory
                         uaggr.save()
                     else:
                         pass
@@ -63,7 +67,13 @@ def update_answer(fn):
 def judge(source_code, input2, output2):
     from .submittasks import judgeOne
 
-    taskObj = judgeOne.delay(input2, output2+'\n', source_code)
-    with allow_join_result():
-        result = taskObj.get(10)
-    return result
+    res = judgeOne.delay(input2, output2+'\n', source_code)
+
+    # wait at most 20 seconds
+    # celery doesn't allow res.get(20) in another tasks, 
+    # so I use this way instead
+    cnt = 20
+    while not res.ready() and cnt>0:
+        gevent.sleep(1)
+        cnt -= 1
+    return res.result

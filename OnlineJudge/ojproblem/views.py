@@ -76,7 +76,7 @@ class OJAnswerViewSet(viewsets.ModelViewSet):
         owner = request.user
         delta = timezone.now() - owner.ojuserprofile.last_submit_time
         delta2 = timedelta(0, 10)
-        # should longer than 10 seconds
+        # submit interval should longer than 10 seconds
         if delta < delta2:
             return errorResponse('submit too fast')
             
