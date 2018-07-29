@@ -1,60 +1,74 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li><a href="http://router.vuejs.org/" target="_blank">vue-router</a></li>
-      <li><a href="http://vuex.vuejs.org/" target="_blank">vuex</a></li>
-      <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-    </ul>
+  <div>
+    <navigation></navigation>
+
+    <el-input
+      placeholder="请输入用户名"
+      v-model="username"
+      clearable>
+    </el-input>
+    <el-input
+      placeholder="请输入密码"
+      v-model="password"
+      clearable>
+    </el-input>
+    <el-button type="danger" 
+          @click="trylogin()">登陆</el-button>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'app',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
+<script type="text/ecmascript-6">
+  import navigation from "./components/navigation/navigation.vue";
+  export default {
+    computed : {
+        baseUrl() {
+            return this.$store.state.baseUrl;
+        },
+        login() {
+            return this.$store.state.login;
+        }
+    },
+    data() {
+      return {
+        username : '',
+        password : ''
+      }
+    },
+    components: {
+      navigation,
+    },
+    methods : {
+      trylogin() {
+        this.$http.post(this.baseUrl+'/api/ojuser/login', {username : this.username, password : this.password}).then(response => {
+          var res = response.body
+          console.log(res)
+
+        this.$http.get(this.baseUrl + '/api/ojuser/profile/my').then(response => {
+                var res = response.body
+                this.$store.commit('login')
+            }, response => {
+              if (response.status == 403){
+                this.$store.commit('logout')
+                console.log("not login")
+                return
+              }
+                console.log(response)
+            });
+
+
+        }, response => {
+          console.log("error")
+        });
+
+
+      },
+
     }
-  }
-}
+  };
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-
-h1, h2 {
-  font-weight: normal;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: #42b983;
+.el-row {
+    margin-bottom: 20px;
 }
 </style>
