@@ -10,6 +10,17 @@ DEBUG = True
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = (
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'X-CSRFToken',
+    'x-requested-with',
+)
 
 DATABASES = {
     'default': {

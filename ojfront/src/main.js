@@ -7,11 +7,13 @@ import routers from './router';
 import VueResource from 'vue-resource'
 import Vuex from 'vuex';
 import store from './store/store';
+import Cookies from 'js-cookie';
 
 Vue.use(VueResource)
 Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.use(Vuex);
+
 Vue.http.interceptors.push((request, next) => {
   request.credentials = true
   next()

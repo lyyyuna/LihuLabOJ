@@ -5,17 +5,17 @@ Vue.use(Vuex);
 
 
 const state = {
-    login : 0,
+    login : false,
     userName : '',
     baseUrl : 'http://127.0.0.1:8000',
 };
 
 const mutations={
     login(state){
-        state.login=1;
+        state.login=true;
     },
     logout(state){
-        state.login=0;
+        state.login=false;
     },
     setUserName(state, name) {
         state.userName=name
