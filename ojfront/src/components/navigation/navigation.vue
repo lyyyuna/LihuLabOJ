@@ -19,17 +19,19 @@
                 <el-menu-item 
                     index="1-3" 
                     v-show="login">
-                    登出
+                    注销
                 </el-menu-item>
-                <el-menu-item index="1-4" v-show="!login">注册</el-menu-item>
+                <el-menu-item index="1-4" v-show="!login">
+                    <router-link to="/register" tag="div">注册</router-link>
+                </el-menu-item>
             </el-submenu>
             <el-menu-item index="2">
-                <router-link to="/problemlist" tag="a">
+                <router-link to="/problemlist" tag="div">
                     题目列表
                 </router-link>
             </el-menu-item>
             <el-menu-item index="3">
-                <router-link to="/cdtlist" tag="a">
+                <router-link to="/cdtlist" tag="div">
                     排名
                 </router-link>      
             </el-menu-item>
@@ -92,12 +94,13 @@ export default {
                 if (code == 0 && data == 'logout success') {
                     this.$message({
                     showClose: true,
-                    message: '登出成功',
+                    message: '注销成功',
                     type: 'success',
-                    duration: 1000
+                    duration: 2000
                     });
                     // update global state
                     this.$store.commit('logout')
+                    this.$store.commit('setUserName', '')
                     console.log('logout')
                 }
                 // code == 1

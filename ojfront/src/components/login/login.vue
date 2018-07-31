@@ -41,6 +41,39 @@ export default {
     },
     methods : {
         trylogin() {
+            // cannot be blank
+            if (this.username == '' || this.password == '') {
+                this.$message({
+                showClose: true,
+                message: '用户名或者密码不能为空',
+                type: 'warning',
+                duration:2000
+                }); 
+                return;
+            }
+            // username length should <30
+            var usernameLen = this.username.length
+            if (usernameLen>30) {
+                this.$message({
+                showClose: true,
+                message: '用户名长度不能大于30',
+                type: 'warning',
+                duration:2000
+                }); 
+                return;
+            }
+            // password length should be 8-20
+            var passLen = this.password.length
+            if (passLen > 20 || passLen < 8) {
+                this.$message({
+                showClose: true,
+                message: '密码长度应在 8～20 之间',
+                type: 'warning',
+                duration:2000
+                }); 
+                return;
+            }
+            // call api
             this.$http.post(this.baseUrl+'/api/ojuser/login', {username : this.username, password : this.password}).then(response => {
                 var rejs = response.body
                 var code = rejs['code']
@@ -57,6 +90,19 @@ export default {
                     this.$store.commit('login')
                     console.log('login')
                     this.$router.push({path : '/problemlist'})
+                    // update my profile global state
+                    this.$http.get(this.baseUrl + '/api/ojuser/profile/my').then(response => {
+                        var rejs = response.body
+                        var name = rejs['data']['username']
+                        this.$store.commit('setUserName', name)
+                    }, response => {
+                        if (response.status == 403){
+                            this.$store.commit('logout')
+                            console.log("not login")
+                            return
+                        }
+                        console.log(response)
+                    });
                 }
                 if (code == 1) {
                     this.$message({
@@ -67,7 +113,7 @@ export default {
                     });                                
                 }
             }, response => {
-                console.log("response")
+                console.log(response)
             });
         },
     }

@@ -6,7 +6,7 @@ from .models import *
 
 
 class ActiviationCodeModelAdmin(admin.ModelAdmin):
-    list_display = ('key',)
+    list_display = ('key', 'count',)
 
 
 class UserProfileModelAdmin(admin.ModelAdmin):
