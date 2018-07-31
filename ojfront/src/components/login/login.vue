@@ -24,6 +24,8 @@
 </template>
 
 <script>
+import Cookies from 'js-cookie';
+
 export default {
     computed : {
         baseUrl() {
@@ -74,7 +76,11 @@ export default {
                 return;
             }
             // call api
-            this.$http.post(this.baseUrl+'/api/ojuser/login', {username : this.username, password : this.password}).then(response => {
+            var csrftoken = Cookies.get('csrftoken');
+            this.$http.post(this.baseUrl+'/api/ojuser/login', 
+                {username : this.username, password : this.password},
+                {headers: {"X-CSRFToken":csrftoken }}
+            ).then(response => {
                 var rejs = response.body
                 var code = rejs['code']
                 var data = rejs['data']
