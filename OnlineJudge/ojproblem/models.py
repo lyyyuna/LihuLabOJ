@@ -28,7 +28,7 @@ class OJAnswer(models.Model):
     submitter = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
     status = models.CharField(max_length=20, default='pending')
     source_code = models.TextField(max_length=2048)
-    result = models.IntegerField(default=-1)
+    result = models.IntegerField(default=-10)
     raw_result = models.TextField()
     cpu = models.IntegerField(default=-1, db_index=True)
     memory = models.IntegerField(default=-1, db_index=True)

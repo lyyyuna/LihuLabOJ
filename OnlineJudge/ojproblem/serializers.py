@@ -45,9 +45,11 @@ class AnswerSerializer(serializers.ModelSerializer):
 
 
 class AnswerBriefSerializer(serializers.ModelSerializer):
+    create_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    
     class Meta:
         model = OJAnswer
-        fields = ('id', 'create_time', 'problem', 'status', 'cpu')
+        fields = ('id', 'create_time', 'problem', 'result', 'cpu')
 
 
 class AnswerRankSerializer(serializers.ModelSerializer):
