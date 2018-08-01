@@ -5,22 +5,24 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 class UserLoginSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=30)
+    username = serializers.CharField(max_length=15)
     password = serializers.CharField(min_length=8, max_length=20)
 
 
 class UserRegisterSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=30)
+    username = serializers.CharField(max_length=15)
     password = serializers.CharField(min_length=8, max_length=20)
     activiation_code = serializers.CharField(max_length=20)
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
     signature = serializers.CharField(source='ojuserprofile.signature', allow_blank=True)
+    pass_num = serializers.CharField(source='ojuserprofile.pass_num', allow_blank=True)
+    total_num = serializers.CharField(source='ojuserprofile.total_num', allow_blank=True)
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'signature')
+        fields = ('id', 'username', 'signature', 'pass_num', 'total_num')
 
 
 class UserProfileUpdateSerializer(serializers.ModelSerializer):

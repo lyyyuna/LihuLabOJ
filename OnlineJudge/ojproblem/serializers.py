@@ -44,6 +44,12 @@ class AnswerSerializer(serializers.ModelSerializer):
         exclude = ('raw_result',)
 
 
+class AnswerBriefSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OJAnswer
+        fields = ('id', 'create_time', 'problem', 'status', 'cpu')
+
+
 class AnswerRankSerializer(serializers.ModelSerializer):
     class Meta:
         model = OJUserAnswerAggr

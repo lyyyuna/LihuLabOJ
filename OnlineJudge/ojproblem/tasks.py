@@ -14,6 +14,7 @@ def update_answer(fn):
         answer = OJAnswer.objects.get(id=answer_id)
         p = OJProblem.objects.get(id=problem_id)
         owner = User.objects.get(id=owner_id)
+        profile = owner.ojuserprofile
 
         answer.status = 'started'
         answer.save()
@@ -25,6 +26,8 @@ def update_answer(fn):
             answer.raw_result = result_dic['result']
             answer.cpu = result_dic['judger']['cpu_time']
             answer.memory = result_dic['judger']['memory']
+            # update profile
+            profile.total_num += 1
             if result_dic['pass'] == True:
                 answer.result = 0
                 # for problem statistics
@@ -38,6 +41,8 @@ def update_answer(fn):
                     uaggr.cpu = answer.cpu
                     uaggr.memory = answer.memory
                     uaggr.save()
+                    # update user profile
+                    profile.pass_num += 1
                 else:
                     if answer.cpu < uaggr.cpu:
                         uaggr.answer = answer
@@ -58,6 +63,8 @@ def update_answer(fn):
             answer.status = 'failed'
             answer.raw_result = str(e)
         answer.save()
+        profile.save()
+
     
     return wrapper
 

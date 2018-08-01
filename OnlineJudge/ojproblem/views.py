@@ -40,7 +40,7 @@ class OJProblemViewSet(viewsets.ModelViewSet):
 class OJAnswerViewSet(viewsets.ModelViewSet):
     queryset = OJAnswer.objects.all().order_by('-id')
     pagination_class = StandardResultsSetPagination
-    serializer_class = AnswerSerializer
+    serializer_class = AnswerBriefSerializer
 
     def get_permissions(self):
         if self.action == 'submit':
@@ -48,6 +48,8 @@ class OJAnswerViewSet(viewsets.ModelViewSet):
         if self.action == 'retrieve':
             self.permission_classes = [IsAuthenticated,]
         if self.action == 'myanswers':
+            self.permission_classes = [IsAuthenticated,]
+        if self.action == 'myanswers_forproblem':
             self.permission_classes = [IsAuthenticated,]
         return super(self.__class__, self).get_permissions()
 
@@ -60,6 +62,19 @@ class OJAnswerViewSet(viewsets.ModelViewSet):
 
     def myanswers(self, request, *args, **kwargs):
         queryset = OJAnswer.objects.filter(submitter=request.user).order_by('-id')
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def myanswers_forproblem(self, request, pk, *args, **kwargs):
+        queryset = OJProblem.objects.all()
+        problem = get_object_or_404(queryset, pk=pk) 
+        queryset = OJAnswer.objects.filter(submitter=request.user, problem=problem).order_by('-id')
 
         page = self.paginate_queryset(queryset)
         if page is not None:

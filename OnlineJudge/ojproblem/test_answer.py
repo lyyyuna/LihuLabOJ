@@ -54,7 +54,7 @@ class OJAnswerTestCase(TestCase):
         res = self.client.get(reverse('answer_detail_api', args=['1']))
         self.assertEqual(res.status_code, 403)
 
-    def test_get_myanswer_list_with_auth(self):
+    def test_get_myanswer_list_for_one_problem_with_auth(self):
         self.client.login(username='yigo', password='yigoyigo')
         res = self.client.get(reverse('problem_myanswer_list_api', args=['1']))
         self.assertEqual(res.status_code, 200)
@@ -65,6 +65,21 @@ class OJAnswerTestCase(TestCase):
         self.assertEqual(20, len(results))        
         self.assertEqual(results[4]['cpu'], 116) # order by desc
 
-    def test_get_myanswer_list_without_auth(self):
+    def test_get_myanswer_list_for_one_problem_without_auth(self):
         res = self.client.get(reverse('problem_myanswer_list_api', args=['1']))
+        self.assertEqual(res.status_code, 403)
+
+    def test_get_myanswer_list_with_auth(self):
+        self.client.login(username='yigo', password='yigoyigo')
+        res = self.client.get(reverse('myanswer_list_api'))
+        self.assertEqual(res.status_code, 200)
+        js_dic = json.loads(res.content)
+
+        self.assertEqual(js_dic['count'], 25)
+        results = js_dic['results']
+        self.assertEqual(20, len(results))        
+        self.assertEqual(results[4]['cpu'], 116) # order by desc
+
+    def test_get_myanswer_list_without_auth(self):
+        res = self.client.get(reverse('myanswer_list_api'))
         self.assertEqual(res.status_code, 403)
