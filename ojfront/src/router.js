@@ -2,6 +2,7 @@ import loginpage from "./components/login/login.vue";
 import problemlistpage from "./components/problemlist/problemlist.vue"
 import registerpage from "./components/register/register.vue"
 import profilepage from "./components/profile/profile.vue"
+import editprofilepage from "./components/profile/editprofile.vue"
 
 const routers = [
     {
@@ -23,6 +24,10 @@ const routers = [
     {
         path : '/profile',
         component : profilepage,
+    },
+    {
+        path : '/editprofile',
+        component : editprofilepage,
     }
 ]
 

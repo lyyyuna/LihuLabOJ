@@ -4,22 +4,26 @@
             <el-row :gutter="20">
                 <el-col :span="6" :offset="9">
                     <el-input
+                        class="lyyinput"
                         placeholder="请输入用户名"
                         v-model="username"
                         clearable>
                     </el-input>
                     <el-input
+                        class="lyyinput"
                         placeholder="邀请码"
                         v-model="ackey"
                         clearable>
                     </el-input>
                     <el-input
+                        class="lyyinput"
                         type="password"
                         placeholder="请输入密码，密码不能过于简单"
                         v-model="password1"
                         clearable>
                     </el-input>
                     <el-input
+                        class="lyyinput"
                         type="password"
                         placeholder="再次输入密码"
                         v-model="password2"
@@ -67,12 +71,12 @@ export default {
                 }); 
                 return;
             }
-            // username length should <30
+            // username length should <15
             var usernameLen = this.username.length
-            if (usernameLen>30) {
+            if (usernameLen>15) {
                 this.$message({
                 showClose: true,
-                message: '用户名长度不能大于30',
+                message: '用户名长度不能大于15',
                 type: 'warning',
                 duration:2000
                 }); 
@@ -116,6 +120,7 @@ export default {
                     type: 'success',
                     duration:2000
                     });
+                    // redirect to login page
                     this.$router.push({path : '/login'})
                     return
                 }
@@ -161,7 +166,8 @@ export default {
 
 
 <style>
-.el-input {
-    margin-bottom: 20px;
+.lyyinput {
+    margin-top: 20px;
 }
+
 </style>

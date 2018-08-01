@@ -11,10 +11,13 @@
             <el-submenu index="1">
                 <template slot="title">个人中心</template>
                 <el-menu-item index="1-1" v-show="login">
-                    <router-link to="/profile" tag="div">个人资料</router-link>
+                    <router-link to="/profile" tag="div">答题情况</router-link>
                 </el-menu-item>
                 <el-menu-item index="1-2" v-show="!login">
                     <router-link to="/login" tag="div">登录</router-link>
+                </el-menu-item>
+                <el-menu-item index="1-5" v-show="login">
+                    <router-link to="/editprofile" tag="div">修改个人资料</router-link>
                 </el-menu-item>
                 <el-menu-item 
                     index="1-3" 
@@ -101,6 +104,8 @@ export default {
                     // update global state
                     this.$store.commit('logout')
                     this.$store.commit('setUserName', '')
+                    // go to problemlist page
+                    this.$router.push({path : '/problemlist'})
                     console.log('logout')
                 }
                 // code == 1
@@ -113,7 +118,5 @@ export default {
 </script>
 
 <style>
-.el-row {
-    margin-bottom: 20px;
-}
+
 </style>

@@ -29,7 +29,5 @@ export default {
 
 
 <style>
-.el-input {
-    margin-bottom: 20px;
-}
+
 </style>

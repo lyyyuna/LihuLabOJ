@@ -4,17 +4,21 @@
             <el-row :gutter="20">
                 <el-col :span="6" :offset="9">
                     <el-input
+                        class="lyyinput"
                         placeholder="请输入用户名"
                         v-model="username"
                         clearable>
                     </el-input>
                     <el-input
+                        class="lyyinput"
                         type="password"
                         placeholder="请输入密码"
                         v-model="password"
                         clearable>
                     </el-input>
-                    <el-button type="danger" 
+                    <el-button 
+                        class="lyyinput"
+                        type="danger" 
                         @click="trylogin()">登录
                     </el-button>
                 </el-col>
@@ -53,12 +57,12 @@ export default {
                 }); 
                 return;
             }
-            // username length should <30
+            // username length should <15
             var usernameLen = this.username.length
-            if (usernameLen>30) {
+            if (usernameLen>15) {
                 this.$message({
                 showClose: true,
-                message: '用户名长度不能大于30',
+                message: '用户名长度不能大于15',
                 type: 'warning',
                 duration:2000
                 }); 
@@ -95,6 +99,7 @@ export default {
                     // update global state
                     this.$store.commit('login')
                     console.log('login')
+                    // go to problemlist page
                     this.$router.push({path : '/problemlist'})
                     // update my profile global state
                     this.$http.get(this.baseUrl + '/api/ojuser/profile/my').then(response => {
@@ -128,7 +133,5 @@ export default {
 
 
 <style>
-.el-input {
-    margin-bottom: 20px;
-}
+
 </style>

@@ -147,9 +147,7 @@ export default {
 
 
 <style>
-.el-input .el-row{
-    margin-bottom: 20px;
-}
+
 .lyyfont {
     font-size: 40px;
 }
