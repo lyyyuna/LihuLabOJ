@@ -1,6 +1,7 @@
 import loginpage from "./components/login/login.vue";
 import problemlistpage from "./components/problemlist/problemlist.vue"
 import registerpage from "./components/register/register.vue"
+import profilepage from "./components/profile/profile.vue"
 
 const routers = [
     {
@@ -18,6 +19,10 @@ const routers = [
     {
         path : '/register',
         component : registerpage,
+    },
+    {
+        path : '/profile',
+        component : profilepage,
     }
 ]
 
