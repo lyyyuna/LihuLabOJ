@@ -7,8 +7,9 @@ import routers from './router';
 import VueResource from 'vue-resource'
 import Vuex from 'vuex';
 import store from './store/store';
-import Cookies from 'js-cookie';
+import VueHighlightJS from 'vue-highlightjs'
 
+Vue.use(VueHighlightJS)
 Vue.use(VueResource)
 Vue.use(ElementUI)
 Vue.use(VueRouter)

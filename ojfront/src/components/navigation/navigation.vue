@@ -34,7 +34,7 @@
                 </router-link>
             </el-menu-item>
             <el-menu-item index="3">
-                <router-link to="/cdtlist" tag="div">
+                <router-link to="/ranks" tag="div">
                     排名
                 </router-link>      
             </el-menu-item>

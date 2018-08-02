@@ -11,30 +11,16 @@
                         border
                         style="width: 100%">
                         <el-table-column
-                        prop="id"
-                        label="题目编号">
-                            <template slot-scope="scope">
-                                {{scope.row.id}}   
-                                <el-button size="mini" type="success" icon="el-icon-check" circle v-show="mapPassToFlag(scope.row.is_passed)"></el-button>
-                            </template>
+                        prop="username"
+                        label="用户名">
                         </el-table-column>
                         <el-table-column
-                        prop="title"
-                        label="标题">
+                        prop="signature"
+                        label="个性签名">
                         </el-table-column>
                         <el-table-column
                         prop="pass_num"
-                        label="通过人数">
-                        </el-table-column>
-                        <el-table-column
-                        prop="total_num"
-                        label="总提交数">
-                        </el-table-column>
-                        <el-table-column
-                        label="操作">
-                            <template slot-scope="scope">
-                                <el-button @click="handleClick(scope.row)" type="text" size="medium">查看</el-button>
-                            </template>
+                        label="通过题目数">
                         </el-table-column>
                     </el-table>
                     <el-pagination
@@ -84,7 +70,7 @@ export default {
     },
     methods : {
         getUserRanks() {
-            this.$http.get(this.baseUrl + '/api/ojproblem/all').then(response => {
+            this.$http.get(this.baseUrl + '/api/ojuser/ranks').then(response => {
                 console.log(response)
                 var rejs = response.body
                 this.tableData = rejs['results']
@@ -120,7 +106,7 @@ export default {
             })
         },
         handleIndexChange(current) {
-            this.$http.get(this.baseUrl + '/api/ojproblem/all'+'?page='+current).then(response => {
+            this.$http.get(this.baseUrl + '/api/ojuser/ranks'+'?page='+current).then(response => {
                 console.log(response)
                 var rejs = response.body
                 this.tableData = rejs['results']
@@ -131,12 +117,6 @@ export default {
                 console.log(response)
             })
         },
-        mapPassToFlag(ispass) {
-            if (ispass == 'pass') {
-                return true
-            }
-            return false
-        }
     }
 }
 </script>

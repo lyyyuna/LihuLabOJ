@@ -3,6 +3,8 @@ import problemlistpage from "./components/problemlist/problemlist.vue"
 import registerpage from "./components/register/register.vue"
 import profilepage from "./components/profile/profile.vue"
 import editprofilepage from "./components/profile/editprofile.vue"
+import answerpage from "./components/answer/answer.vue"
+import rankspage from "./components/ranks/ranks.vue"
 
 const routers = [
     {
@@ -28,6 +30,15 @@ const routers = [
     {
         path : '/editprofile',
         component : editprofilepage,
+    },
+    {
+        path : '/answerdetail/:id',
+        component : answerpage,
+        name : 'answerdetail',
+    },
+    {
+        path : '/ranks',
+        component : rankspage,
     }
 ]
 

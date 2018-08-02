@@ -13,6 +13,7 @@
                         <el-button type="danger" size="medium">总提交数</el-button>
                     </el-badge></div>
                     <el-table
+                        stripe
                         class="lyybox"
                         :data="tableData"
                         border
@@ -41,7 +42,7 @@
                         <el-table-column
                         label="操作">
                             <template slot-scope="scope">
-                                <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+                                <el-button @click="handleClick(scope.row)" type="text" size="medium">查看</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -152,6 +153,13 @@ export default {
                 this.currentNext = rejs['next']
             }, response => {
                 console.log(response)
+            })
+        },
+        handleClick(row) {
+            this.$router.push({
+                name : 'answerdetail', 
+                params : 
+                    {id : row.id}
             })
         },
         mapResultToString(result) {
