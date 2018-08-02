@@ -12,8 +12,8 @@
                         <el-col :span="4" :offset="3">结果</el-col>
                         <el-col :span="16">
                             <el-tag
-                                :type="mapResultToColor(result)"
-                                disable-transitions>{{mapResultToString(result)}}
+                                :type="mapResultToColor(result, runtime)"
+                                disable-transitions>{{mapResultToString(result, runtime)}}
                             </el-tag>
                         </el-col>
                     </el-row>
@@ -75,6 +75,7 @@ export default {
             time3 : '',
             activeIndex : 1,
             result : -10,
+            runtime : -10,
             cpu : '-1 ms',
             memory : '-1 kB',
             sourceCode : '',
@@ -93,6 +94,7 @@ export default {
                 this.time1 = rejs['data']['create_time']
                 var status = rejs['data']['status']
                 this.result = rejs['data']['result']
+                this.runtime = rejs['data']['runtime']
                 this.problemId = rejs['data']['problem']
                 if (rejs['data']['cpu']!=-1) {
                     this.cpu = rejs['data']['cpu'] + ' ms'
@@ -129,12 +131,14 @@ export default {
                     {id : this.problemId}
             })
         },
-        mapResultToString(result) {
+        mapResultToString(result, runtime) {
             switch(result) {
-                case -1:
+                case 1:
                     return '答案错误'
                 case 0:
                     return '答案正确'
+            }
+            switch(runtime) {
                 case 1:
                     return '运行超时'
                 case 2:
@@ -149,12 +153,14 @@ export default {
                     return 'N/A'
             }
         },
-        mapResultToColor(result) {
+        mapResultToColor(result, runtime) {
             switch(result) {
-                case -1:
+                case 1:
                     return 'danger'
                 case 0:
                     return 'success'
+            }
+            switch(runtime) {
                 case 1:
                     return 'warning'
                 case 2:

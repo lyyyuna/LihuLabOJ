@@ -52,7 +52,7 @@ class AnswerBriefSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OJAnswer
-        fields = ('id', 'create_time', 'problem', 'result', 'cpu')
+        fields = ('id', 'create_time', 'problem', 'runtime', 'result', 'cpu')
 
 
 class AnswerRankSerializer(serializers.ModelSerializer):

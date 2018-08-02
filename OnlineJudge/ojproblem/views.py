@@ -89,7 +89,8 @@ class OJAnswerViewSet(viewsets.ModelViewSet):
         p = get_object_or_404(queryset, pk=pk)
 
         owner = request.user
-        delta = timezone.now() - owner.ojuserprofile.last_submit_time
+        profile = owner.ojuserprofile
+        delta = timezone.now() - profile.last_submit_time
         delta2 = timedelta(0, 10)
         # submit interval should longer than 10 seconds
         if delta < delta2:
@@ -105,7 +106,6 @@ class OJAnswerViewSet(viewsets.ModelViewSet):
                                 submitter=owner,
                                 source_code=request.data['source_code'])
         # update last submit time
-        profile = owner.ojuserprofile
         profile.last_submit_time = timezone.now()
         profile.save()
         # add count for current problem

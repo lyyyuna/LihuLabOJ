@@ -35,8 +35,8 @@
                         label="结果">
                             <template slot-scope="scope">
                                 <el-tag
-                                :type="mapResultToColor(scope.row.result)"
-                                disable-transitions>{{mapResultToString(scope.row.result)}}</el-tag>
+                                :type="mapResultToColor(scope.row.result, scope.row.runtime)"
+                                disable-transitions>{{mapResultToString(scope.row.result, scope.row.runtime)}}</el-tag>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -162,12 +162,14 @@ export default {
                     {id : row.id}
             })
         },
-        mapResultToString(result) {
+        mapResultToString(result, runtime) {
             switch(result) {
-                case -1:
+                case 1:
                     return '答案错误'
                 case 0:
                     return '答案正确'
+            }
+            switch(runtime) {
                 case 1:
                     return '运行超时'
                 case 2:
@@ -182,12 +184,14 @@ export default {
                     return 'N/A'
             }
         },
-        mapResultToColor(result) {
+        mapResultToColor(result, runtime) {
             switch(result) {
-                case -1:
+                case 1:
                     return 'danger'
                 case 0:
                     return 'success'
+            }
+            switch(runtime) {
                 case 1:
                     return 'warning'
                 case 2:

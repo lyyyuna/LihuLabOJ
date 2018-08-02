@@ -96,8 +96,8 @@
                         label="结果">
                             <template slot-scope="scope">
                                 <el-tag
-                                :type="mapResultToColor(scope.row.result)"
-                                disable-transitions>{{mapResultToString(scope.row.result)}}</el-tag>
+                                :type="mapResultToColor(scope.row.result, scope.row.runtime)"
+                                disable-transitions>{{mapResultToString(scope.row.result, scope.row.runtime)}}</el-tag>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -127,6 +127,8 @@
 </template>
 
 <script>
+import Cookies from 'js-cookie';
+
 export default {
     computed : {
         baseUrl() {
@@ -159,6 +161,69 @@ export default {
         this.getMyRecentAnswers()
     },
     methods : {
+        trySubmitAnswer() {
+            // cannot be blank
+            if (this.sourceCode == '') {
+                this.$message({
+                showClose: true,
+                message: '答案不能为空',
+                type: 'warning',
+                duration:2000
+                }); 
+                return;
+            }
+            if (this.sourceCode.length > 2048) {
+                this.$message({
+                showClose: true,
+                message: '源码长度不能超过2048',
+                type: 'warning',
+                duration:2000
+                }); 
+                return;
+            }
+            var problemId = this.$route.params.id
+            var csrftoken = Cookies.get('csrftoken');
+            this.$http.post(this.baseUrl + '/api/ojproblem/'+problemId+'/submit', 
+                {source_code : this.sourceCode}, 
+                {headers: {"X-CSRFToken":csrftoken }}
+            ).then(response => {
+                console.log(response)
+                var rejs = response.body
+                var code = rejs['code']
+                var data = rejs['data']
+                if (code == 0) {
+                    this.$message({
+                    showClose: true,
+                    message: '提交成功，刷新后在下方查看本人本题答题情况',
+                    type: 'success',
+                    duration:2000
+                    });
+                    return
+                }
+                if (code == 1) {
+                    if (data == 'submit too fast') {
+                        this.$message({
+                        showClose: true,
+                        message: '提交过于频繁，请过10s再提交',
+                        type: 'warning',
+                        duration:2000
+                        });    
+                        return   
+                    }
+                    if (data == 'input invalid') {
+                        this.$message({
+                        showClose: true,
+                        message: '输入不符合要求',
+                        type: 'warning',
+                        duration:2000
+                        });    
+                        return   
+                    }
+                }
+            }, response => {
+                console.log(response)
+            })
+        },
         getProblemDetail() {
             var problemId = this.$route.params.id
             this.$http.get(this.baseUrl + '/api/ojproblem/'+problemId+'/detail').then(response => {
@@ -249,12 +314,14 @@ export default {
                     {id : row.id}
             })
         },
-        mapResultToString(result) {
+        mapResultToString(result, runtime) {
             switch(result) {
-                case -1:
+                case 1:
                     return '答案错误'
                 case 0:
                     return '答案正确'
+            }
+            switch(runtime) {
                 case 1:
                     return '运行超时'
                 case 2:
@@ -269,12 +336,14 @@ export default {
                     return 'N/A'
             }
         },
-        mapResultToColor(result) {
+        mapResultToColor(result, runtime) {
             switch(result) {
-                case -1:
+                case 1:
                     return 'danger'
                 case 0:
                     return 'success'
+            }
+            switch(runtime) {
                 case 1:
                     return 'warning'
                 case 2:
