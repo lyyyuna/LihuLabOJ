@@ -136,7 +136,14 @@ export default {
                 return true
             }
             return false
-        }
+        },
+        handleClick(row) {
+            this.$router.push({
+                name : 'problemdetail', 
+                params : 
+                    {id : row.id}
+            })
+        },
     }
 }
 </script>

@@ -77,7 +77,8 @@ export default {
             result : -10,
             cpu : '-1 ms',
             memory : '-1 kB',
-            sourceCode : ''
+            sourceCode : '',
+            problemId : '',
         }
     },
     created() {
@@ -92,6 +93,7 @@ export default {
                 this.time1 = rejs['data']['create_time']
                 var status = rejs['data']['status']
                 this.result = rejs['data']['result']
+                this.problemId = rejs['data']['problem']
                 if (rejs['data']['cpu']!=-1) {
                     this.cpu = rejs['data']['cpu'] + ' ms'
                     this.memory = (rejs['data']['memory']/1024) + ' kB'
@@ -119,6 +121,13 @@ export default {
             }, response => {
                 console.log(response)
             });        
+        },
+        handleClick() {
+            this.$router.push({
+                name : 'problemdetail', 
+                params : 
+                    {id : this.problemId}
+            })
         },
         mapResultToString(result) {
             switch(result) {

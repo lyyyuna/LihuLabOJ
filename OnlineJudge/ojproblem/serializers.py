@@ -56,9 +56,11 @@ class AnswerBriefSerializer(serializers.ModelSerializer):
 
 
 class AnswerRankSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='submitter.username')
+
     class Meta:
         model = OJUserAnswerAggr
-        fields = ('id', 'update_time', 'problem', 'answer', 'cpu', 'memory')
+        fields = ('id', 'username', 'problem', 'answer', 'cpu', 'memory')
 
 
 class SubmitAnswerSerializer(serializers.ModelSerializer):

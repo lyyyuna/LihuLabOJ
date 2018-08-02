@@ -5,6 +5,7 @@ import profilepage from "./components/profile/profile.vue"
 import editprofilepage from "./components/profile/editprofile.vue"
 import answerpage from "./components/answer/answer.vue"
 import rankspage from "./components/ranks/ranks.vue"
+import problemdetailpage from "./components/problemlist/problemdetail.vue"
 
 const routers = [
     {
@@ -39,7 +40,12 @@ const routers = [
     {
         path : '/ranks',
         component : rankspage,
-    }
+    },
+    {
+        path : '/problemdetail/:id',
+        component : problemdetailpage,
+        name : 'problemdetail',
+    },
 ]
 
 export default routers
