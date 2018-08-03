@@ -227,9 +227,9 @@ export default {
                     if (data == 'judge server down') {
                         this.$message({
                         showClose: true,
-                        message: '判题服务器意外下线，请稍后提交',
+                        message: '判题服务器意外下线，请稍后尝试',
                         type: 'warning',
-                        duration:2000
+                        duration:3000
                         });    
                         return   
                     }
