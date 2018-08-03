@@ -96,3 +96,4 @@ docker-compose.development.yml
 
 # production
 production.py
+uwsgi.ini
