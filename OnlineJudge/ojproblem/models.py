@@ -4,6 +4,8 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class OJProblem(models.Model):
@@ -19,6 +21,18 @@ class OJProblem(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+
+# method for updating
+@receiver(post_save, sender=OJProblem)
+def update_stock(sender, instance, **kwargs):
+    post_save.disconnect(update_stock, sender=sender)
+    input2 = instance.input2.splitlines()
+    output2 = instance.output2.splitlines()
+    instance.input2 = '\n'.join(input2)
+    instance.output2 = '\n'.join(output2)
+    instance.save()
+    post_save.connect(update_stock, sender=sender)
 
 
 class OJAnswer(models.Model):
