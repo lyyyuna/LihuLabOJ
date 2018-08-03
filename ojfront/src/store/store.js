@@ -7,7 +7,7 @@ Vue.use(Vuex);
 const state = {
     login : false,
     userName : '',
-    baseUrl : 'http://127.0.0.1:8000',
+    baseUrl : 'http://oj.lihulab.net',
 };
 
 const mutations={
