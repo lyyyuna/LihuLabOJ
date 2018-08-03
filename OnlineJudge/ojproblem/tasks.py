@@ -35,6 +35,7 @@ def update_answer(fn):
                 # update aggregation tables
                 uaggr, created = OJUserAnswerAggr.objects.get_or_create(problem=p, submitter=owner)
                 if created:
+                    uaggr.result = 0
                     uaggr.answer = answer
                     uaggr.cpu = answer.cpu
                     uaggr.memory = answer.memory
