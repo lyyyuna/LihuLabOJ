@@ -24,7 +24,7 @@
                         </el-table-column>
                         <el-table-column
                         prop="pass_num"
-                        label="通过人数">
+                        label="通过提交数">
                         </el-table-column>
                         <el-table-column
                         prop="total_num"

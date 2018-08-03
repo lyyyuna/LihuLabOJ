@@ -194,10 +194,15 @@ export default {
                 if (code == 0) {
                     this.$message({
                     showClose: true,
-                    message: '提交成功，刷新后在下方查看本人本题答题情况',
+                    message: '提交成功',
                     type: 'success',
                     duration:2000
                     });
+                    this.$router.push({
+                        name : 'answerdetail', 
+                        params : 
+                            {id : data}
+                    })
                     return
                 }
                 if (code == 1) {
@@ -214,6 +219,15 @@ export default {
                         this.$message({
                         showClose: true,
                         message: '输入不符合要求',
+                        type: 'warning',
+                        duration:2000
+                        });    
+                        return   
+                    }
+                    if (data == 'judge server down') {
+                        this.$message({
+                        showClose: true,
+                        message: '判题服务器意外下线，请稍后提交',
                         type: 'warning',
                         duration:2000
                         });    
@@ -273,7 +287,7 @@ export default {
             this.$http.get(this.currentPrev).then(response => {
                 console.log(response)
                 var rejs = response.body
-                this.tableData = rejs['results']
+                this.answerForThisData = rejs['results']
                 this.totalItem = rejs['count']
                 this.currentPrev = rejs['previous']
                 this.currentNext = rejs['next']
@@ -285,7 +299,7 @@ export default {
             this.$http.get(this.currentNext).then(response => {
                 console.log(response)
                 var rejs = response.body
-                this.tableData = rejs['results']
+                this.answerForThisData = rejs['results']
                 this.totalItem = rejs['count']
                 this.currentPrev = rejs['previous']
                 this.currentNext = rejs['next']
@@ -299,7 +313,7 @@ export default {
             this.$http.get(this.baseUrl + '/api/ojproblem/'+problemId+'/myanswers'+'?page='+current).then(response => {
                 console.log(response)
                 var rejs = response.body
-                this.tableData = rejs['results']
+                this.answerForThisData = rejs['results']
                 this.totalItem = rejs['count']
                 this.currentPrev = rejs['previous']
                 this.currentNext = rejs['next']

@@ -112,8 +112,8 @@ class OJAnswerViewSet(viewsets.ModelViewSet):
         p.total_num += 1
         p.save()
         from tasks import judge
-        judge.delay(a.id, p.id, owner.id, request.data['source_code'], p.input2, p.output2)
-        return successResponse('submit success')
+        judge.apply_async((a.id, p.id, owner.id, request.data['source_code'], p.input2, p.output2), retry=False)
+        return successResponse(a.id)
 
 
 class OJRanksViewSet(viewsets.ModelViewSet):
