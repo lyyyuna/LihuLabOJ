@@ -28,10 +28,11 @@ def update_answer(fn):
             answer.memory = result_dic['judger']['memory']
             # update profile
             profile.total_num += 1
-            # for problem statistics
-            p.pass_num += 1
+
             if result_dic['pass'] == True:
                 answer.result = 0
+                # for problem statistics
+                p.pass_num += 1
                 # update aggregation tables
                 uaggr, created = OJUserAnswerAggr.objects.get_or_create(problem=p, submitter=owner)
                 if created:
