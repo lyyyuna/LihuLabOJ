@@ -132,11 +132,13 @@ export default {
             })
         },
         mapResultToString(result, runtime) {
-            switch(result) {
-                case 1:
-                    return '答案错误'
-                case 0:
-                    return '答案正确'
+            if (runtime == 0) {
+                switch(result) {
+                    case 1:
+                        return '答案错误'
+                    case 0:
+                        return '答案正确'
+                }
             }
             switch(runtime) {
                 case 1:
@@ -154,11 +156,13 @@ export default {
             }
         },
         mapResultToColor(result, runtime) {
-            switch(result) {
-                case 1:
-                    return 'danger'
-                case 0:
-                    return 'success'
+            if (runtime == 0) {
+                switch(result) {
+                    case 1:
+                        return 'danger'
+                    case 0:
+                        return 'success'
+                }
             }
             switch(runtime) {
                 case 1:
