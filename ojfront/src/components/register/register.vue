@@ -29,7 +29,9 @@
                         v-model="password2"
                         clearable>
                     </el-input>
-                    <el-button type="danger" 
+                    <el-button 
+                        class="lyyinput"
+                        type="danger" 
                         @click="tryRegister()">点击注册
                     </el-button>
                 </el-col>
