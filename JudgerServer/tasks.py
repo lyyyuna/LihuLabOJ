@@ -1,6 +1,8 @@
 import _judger
 import os
 import uuid
+import grp
+import pwd
 from celery import Celery
 
 
@@ -15,6 +17,10 @@ app = Celery('tasks', broker=uri, backend='rpc://')
 app.conf.update(
     worker_max_tasks_per_child = 20,
 )
+
+
+myuid = pwd.getpwnam('myuser').pw_uid
+mygid = grp.getgrnam('myuser').gr_gid
 
 
 @app.task
@@ -43,8 +49,8 @@ def judgeOne(realInput, expectedOutput, script):
                     env=[],
                     log_path="judger.log",
                     seccomp_rule_name="general",
-                    uid=0,
-                    gid=0)
+                    uid=myuid,
+                    gid=mygid)
 
     retDic = {}
     retDic['judger'] = ret
