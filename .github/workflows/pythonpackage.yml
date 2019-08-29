@@ -23,7 +23,7 @@ jobs:
         pip install "django<2" --quiet
         pip install djangorestframework --quiet
         pip install coveralls --quiet
-        pip install psycopg2 --quiet
+        pip install psycopg2-binary --quiet
         pip install celery --quiet
         pip install django-cors-headers --quiet
     - name: Test
